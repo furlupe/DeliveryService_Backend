@@ -1,4 +1,5 @@
 <?php
+    include "routers/AccountRouter.php";
     function getData($method) {
         $data = new stdClass();
         if ($method != "GET") {
@@ -12,6 +13,13 @@
         }
 
         return $data;
+    }
+
+    function determineRouter($key) {
+        switch($key) {
+            case "account":
+                return new AccountRouter();
+        }
     }
 
     header('Content-type: application/json');
@@ -37,13 +45,6 @@
         exit;
     }
 
-    $controllerpath = 'routing/'.$urlList[1].'.php';
     $requestData = getData($method);
-
-    if(file_exists(realpath(dirname(__FILE__)).'/'.$controllerpath)) {
-        include_once $controllerpath;
-        route($method, $urlList, $requestData);
-    } else {
-        echo 'No such request as '.$url;
-    }
+    determineRouter($urlList[1])->route();
 ?>
