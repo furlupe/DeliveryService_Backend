@@ -25,7 +25,6 @@
     header('Content-type: application/json');
 
     $method = $_SERVER['REQUEST_METHOD'];
-
     $url = rtrim(
         isset($_GET['q']) ? $_GET['q'] : '',
         '/'
