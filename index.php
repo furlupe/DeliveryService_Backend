@@ -23,14 +23,6 @@
     }
 
     header('Content-type: application/json');
-    $link = mysqli_connect("127.0.0.1", "backend_food", "password", "backend_food");
-
-    if(!$link) {
-        echo "Connection error occured".PHP_EOL;
-        echo "Errno: ".mysqli_connect_errno().PHP_EOL;
-        echo "Error: ".mysqli_connect_error().PHP_EOL;
-        exit;
-    }
 
     $method = $_SERVER['REQUEST_METHOD'];
 
