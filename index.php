@@ -18,8 +18,9 @@
     $link = mysqli_connect("127.0.0.1", "backend_food", "password", "backend_food");
 
     if(!$link) {
-        echo "еррор какой-та".PHP_EOL;
-        echo "ашипка: ".mysqli_connect_error().PHP_EOL;
+        echo "Connection error occured".PHP_EOL;
+        echo "Errno: ".mysqli_connect_errno().PHP_EOL;
+        echo "Error: ".mysqli_connect_error().PHP_EOL;
         exit;
     }
 
