@@ -3,7 +3,7 @@
     function getData($method) {
         $data = new stdClass();
         if ($method != "GET") {
-            $data = json_decode(file_get_contents('php://input'));
+            $data->body = json_decode(file_get_contents('php://input'));
         }
 
         $data->params = [];

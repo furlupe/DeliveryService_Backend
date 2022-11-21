@@ -1,4 +1,5 @@
 <?php
+    include dirname(__DIR__, 1)."/Query.php";
     class UserRegisterModel {
         private $fullName;
         private $password;
@@ -8,31 +9,31 @@
         private $gender;
         private $phoneNumber;
 
-        public function __construct(
-            $fullName,
-            $password,
-            $email, 
-            $address,
-            $birthDate,
-            $gender,
-            $phoneNumber) {
-                $this->fullName = $fullName;
-                $this->password = $password;
-                $this->birthDate = $birthDate;
-                $this->gender = $gender;
-                $this->address = $address;
-                $this->email = $email;
-                $this->phoneNumber = $phoneNumber;
+        private $link;
+
+        public function __construct($data) {
+                $this->fullName = $data->fullName;
+                $this->password = $data->password;
+                $this->birthDate = $data->birthDate;
+                $this->gender = $data->gender;
+                $this->address = $data->address;
+                $this->email = $data->email;
+                $this->phoneNumber = $data->phoneNumber;
+
+                $this->link = Query::connect();
         }
 
-        public function getJSON() {
-            $json = [];
-            foreach(get_object_vars($this) as $key => $value) {
-                $json[$key] = $value;
-            }
-
-            return $json;
+        public function store() {
+            return $this->link->query("INSERT INTO USERS(name, birthdate, gender, phone, email, adress, password) 
+                VALUES(
+                    '$this->fullName',
+                    '$this->birthDate',
+                    '$this->gender',
+                    '$this->phoneNumber',
+                    '$this->email',
+                    '$this->address',
+                    '$this->password'
+            )");
         }
-
     }
 ?>
