@@ -1,6 +1,7 @@
 <?php
     include dirname(__DIR__, 1)."/Query.php";
-    class UserRegisterModel {
+    include "ModelInterface.php";
+    class UserRegisterModel implements IModel {
         private $fullName;
         private $password;
         private $email;
@@ -23,8 +24,13 @@
                 $this->link = Query::connect();
         }
 
+        public function exists() {
+            return $this->link->query("SELECT id FROM USERS WHERE email='$this->email'")->fetch_assoc();
+        }
+
         public function store() {
-            return $this->link->query("INSERT INTO USERS(name, birthdate, gender, phone, email, adress, password) 
+            return (!$this->exists()) ? 
+            $this->link->query("INSERT INTO USERS(name, birthdate, gender, phone, email, adress, password) 
                 VALUES(
                     '$this->fullName',
                     '$this->birthDate',
@@ -33,7 +39,8 @@
                     '$this->email',
                     '$this->address',
                     '$this->password'
-            )");
+            )") :
+            null;
         }
     }
 ?>

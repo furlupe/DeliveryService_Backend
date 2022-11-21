@@ -5,7 +5,7 @@
         
         public function route($method, $urlList, $requestData) {
             $controller = new AccountController();
-            $controller->getResponse(
+            echo $controller->getResponse(
                 $method,
                 $urlList,
                 $requestData
