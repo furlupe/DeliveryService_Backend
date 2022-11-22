@@ -7,7 +7,7 @@
             );
         }
 
-        public static function generateJWT($headers, $payload, $secret="morbius") {
+        public static function generateJWT($headers, $payload, $secret="morbius") : string {
             $headers_enc = self::base64url_encode(json_encode($headers));
             $payload_enc = self::base64url_encode(json_encode($payload));
     
@@ -16,7 +16,7 @@
     
             return "$headers_enc.$payload_enc.$signature_enc";
         }
-        private static function base64url_encode($str) {
+        private static function base64url_encode($str) : string {
             return str_replace(
                 ['+', '/', '='],
                 ['-', '_', ''],

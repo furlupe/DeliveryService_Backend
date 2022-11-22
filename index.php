@@ -1,5 +1,5 @@
 <?php
-    include "routers/AccountRouter.php";
+    include_once "routers/AccountRouter.php";
 
     const ip = "127.0.0.1";
     const username = "backend_food";
@@ -33,6 +33,7 @@
     header('Content-type: application/json');
 
     $LINK = new mysqli(ip, username, password, db);
+    $REQUESTS_CALLBACKS = array();
 
     $method = $_SERVER['REQUEST_METHOD'];
     $url = rtrim(
