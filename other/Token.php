@@ -17,7 +17,11 @@
             return "$headers_enc.$payload_enc.$signature_enc";
         }
         private static function base64url_encode($str) {
-            return rtrim(strtr(base64_encode($str), '+/', '-_'), '=');
+            return str_replace(
+                ['+', '/', '='],
+                ['-', '_', ''],
+                base64_encode($str)
+            );
         }
 
         private static function getIdByEmail($email) {
