@@ -23,7 +23,7 @@
                                         "typ" => "JWT"
                                     ),
                                     array(
-                                        "email" => $body->email,
+                                        "email" => $requestData->email,
                                     )
                                 ))->getToken();
                             }
