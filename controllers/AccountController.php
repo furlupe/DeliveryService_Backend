@@ -1,6 +1,7 @@
 <?php
     include dirname(__DIR__, 1)."/models/UserRegisterModel.php";
     include dirname(__DIR__, 1)."/JWT.php";
+    include dirname(__DIR__, 1)."/other/Token.php";
     class AccountController {
         public function getResponse($method, $urlList, $requestData) {
             $response = null;
@@ -17,8 +18,7 @@
                         case "register":                             
                             $user = new UserRegisterModel($requestData->body);
                             if($user->store()) {
-                                $token = (
-                                    new JWT(
+                                $token = generateJWT(
                                     array(
                                         "alg" => "HS256",
                                         "typ" => "JWT"
@@ -26,7 +26,8 @@
                                     array(
                                         "email" => $requestData->body->email,
                                     )
-                                ))->getToken();
+                                );
+                                Token::storeTokenOnEmail($requestData->body->email, $token);
                             }
                             break;
                         }
