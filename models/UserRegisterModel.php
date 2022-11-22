@@ -1,7 +1,7 @@
 <?php
-    include dirname(__DIR__, 1)."/Query.php";
     include dirname(__DIR__, 1)."/enums/Gender.php";
     include "ModelInterface.php";
+
     class UserRegisterModel implements IModel {
         private $fullName;
         private $password;
@@ -21,8 +21,7 @@
                 $this->address = $data->address;
                 $this->setEmail($data->email);
                 $this->setPhone($data->phoneNumber);
-
-                $this->link = Query::connect();
+                $this->link = $GLOBALS["LINK"];
         }
 
         public function exists() {

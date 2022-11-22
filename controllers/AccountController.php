@@ -1,5 +1,6 @@
 <?php
     include dirname(__DIR__, 1)."/models/UserRegisterModel.php";
+    include dirname(__DIR__, 1)."/other/headers.php";
     include dirname(__DIR__, 1)."/other/Token.php";
     class AccountController {
         public function getResponse($method, $urlList, $requestData) {

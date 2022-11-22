@@ -1,5 +1,13 @@
 <?php
     include "routers/AccountRouter.php";
+
+    const ip = "127.0.0.1";
+    const username = "backend_food";
+    const password = "password";
+    const db = "backend_food";
+
+    global $LINK;
+
     function getData($method) {
         $data = new stdClass();
         if ($method != "GET") {
@@ -23,6 +31,8 @@
     }
 
     header('Content-type: application/json');
+
+    $LINK = new mysqli(ip, username, password, db);
 
     $method = $_SERVER['REQUEST_METHOD'];
     $url = rtrim(
