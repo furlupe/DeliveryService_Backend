@@ -14,12 +14,8 @@
                     break;
                 case "POST":
                     switch($urlList[0]) {
-                        case "register":
-                            $body = $requestData->body;
-                            $body->password = hash("sha1", $body->password);
-                            $body->birthDate = date('y-m-d',strtotime($body->birthDate));
-                                
-                            $user = new UserRegisterModel($body);
+                        case "register":                             
+                            $user = new UserRegisterModel($requestData->body);
                             if($user->store()) {
                                 $response = (new JWT(
                                     array(

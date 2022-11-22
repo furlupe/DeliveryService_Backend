@@ -1,5 +1,6 @@
 <?php
     include dirname(__DIR__, 1)."/Query.php";
+    include dirname(__DIR__, 1)."/enums/Gender.php";
     include "ModelInterface.php";
     class UserRegisterModel implements IModel {
         private $fullName;
@@ -13,13 +14,13 @@
         private $link;
 
         public function __construct($data) {
-                $this->fullName = $data->fullName;
-                $this->password = $data->password;
-                $this->birthDate = $data->birthDate;
-                $this->gender = $data->gender;
+                $this->setName($data->fullName);
+                $this->setPassword($data->password);
+                $this->birthDate = date('y-m-d',strtotime($data->birthDate));
+                $this->setGender($data->gender);
                 $this->address = $data->address;
-                $this->email = $data->email;
-                $this->phoneNumber = $data->phoneNumber;
+                $this->setEmail($data->email);
+                $this->setPhone($data->phoneNumber);
 
                 $this->link = Query::connect();
         }
@@ -41,6 +42,51 @@
                     '$this->password'
             )") :
             null;
+        }
+
+        public function setName($name) {
+            if(strlen($name) < 1) {
+                echo "wrong name";
+                return;
+            }
+
+            $this->fullName = $name;
+        }
+
+        public function setPassword($password) {
+            if(strlen($password) < 6) {
+                echo "wrong password";
+                return;
+            }
+
+            $this->password = hash("sha1", $password);;
+        }
+
+        public function setEmail($email) {
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                echo "wrong email";
+                return;
+            }
+
+            $this->email = $email;
+        }
+
+        public function setGender($gender) {
+            if(!Gender::checkIfExists($gender)) {
+                echo "no such gender exists";
+                return;
+            }
+
+            $this->gender = $gender;
+        }
+
+        public function setPhone($phone) {
+            if(!preg_match('/\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/', $phone)) {
+                echo "wrong phone";
+                return;
+            }
+
+            $this->phoneNumber = $phone;
         }
     }
 ?>
