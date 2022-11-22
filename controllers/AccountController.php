@@ -8,10 +8,20 @@
                 return "Error occured";
             }
             
-            $link = new mysqli("127.0.0.1", "backend_food", "password", "backend_food");
-            
-            $link->close();
+            switch($method) {
+                case "GET":
+                    break;
+                case "POST":
+                    switch($urlList[0]) {
+                        case "login":                             
+                            
+                        }
+                    break;
+                default:
+                    break;
+            }
             return json_encode($response);
         }
     }
+
 ?>
