@@ -1,6 +1,5 @@
 <?php
     include dirname(__DIR__, 1)."/models/UserRegisterModel.php";
-    include dirname(__DIR__, 1)."/JWT.php";
     include dirname(__DIR__, 1)."/other/Token.php";
     class AccountController {
         public function getResponse($method, $urlList, $requestData) {
@@ -18,7 +17,7 @@
                         case "register":                             
                             $user = new UserRegisterModel($requestData->body);
                             if($user->store()) {
-                                $token = generateJWT(
+                                $token = Token::generateJWT(
                                     array(
                                         "alg" => "HS256",
                                         "typ" => "JWT"
