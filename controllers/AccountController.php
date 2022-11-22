@@ -17,13 +17,14 @@
                         case "register":                             
                             $user = new UserRegisterModel($requestData->body);
                             if($user->store()) {
-                                $response = (new JWT(
+                                $token = (
+                                    new JWT(
                                     array(
                                         "alg" => "HS256",
                                         "typ" => "JWT"
-                                    ),
+                                    ), 
                                     array(
-                                        "email" => $requestData->email,
+                                        "email" => $requestData->body->email,
                                     )
                                 ))->getToken();
                             }
