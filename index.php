@@ -49,10 +49,15 @@
 
     $requestData = getData($method);
 
-    $router = determineRouter($urlList[1]);
-    $router->route(
-        $method, 
-        array_slice($urlList, 2), 
-        $requestData
-    );
+    try {
+        $router = determineRouter($urlList[1]);
+        $router->route(
+            $method, 
+            array_slice($urlList, 2), 
+            $requestData
+        );
+    }
+    catch (Throwable $e) {
+        echo $e->__toString();
+    }
 ?>

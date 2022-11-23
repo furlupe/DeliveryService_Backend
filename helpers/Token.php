@@ -16,6 +16,7 @@
     
             return "$headers_enc.$payload_enc.$signature_enc";
         }
+        
         private static function base64url_encode($str) : string {
             return str_replace(
                 ['+', '/', '='],

@@ -7,7 +7,6 @@
 
             /* implement error throwing */
             if(!$user->store()) {
-                echo "reg error";
                 return array();
             }
             

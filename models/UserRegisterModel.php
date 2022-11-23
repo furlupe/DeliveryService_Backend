@@ -10,8 +10,8 @@
         private $birthDate;
         private $gender;
         private $phoneNumber;
-
         private $link;
+        private $errors = array();
 
         public function __construct($data) {
                 $this->setName($data->fullName);
@@ -21,6 +21,13 @@
                 $this->address = $data->address;
                 $this->setEmail($data->email);
                 $this->setPhone($data->phoneNumber);
+
+                if ($this->errors) {
+                    throw new InvalidDataException(
+                        json_encode(array("errors" => $this->errors))
+                    );
+                }
+
                 $this->link = $GLOBALS["LINK"];
         }
 
@@ -45,7 +52,9 @@
 
         public function setName($name) {
             if(strlen($name) < 1) {
-                echo "wrong name";
+                $this->errors.array_push("name: {
+                    message: name too short
+                }");
                 return;
             }
 
@@ -54,16 +63,20 @@
 
         public function setPassword($password) {
             if(strlen($password) < 6) {
-                echo "wrong password";
+                $this->errors.array_push("password {
+                    message: password too short
+                }");
                 return;
             }
 
-            $this->password = hash("sha1", $password);;
+            $this->password = hash("sha1", $password);
         }
 
         public function setEmail($email) {
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                echo "wrong email";
+                $this->errors.array_push("email {
+                    message: invalid email
+                }");
                 return;
             }
 
@@ -72,7 +85,9 @@
 
         public function setGender($gender) {
             if(!Gender::checkIfExists($gender)) {
-                echo "no such gender exists";
+                $this->errors.array_push("gender {
+                    message: invalid gender
+                }");
                 return;
             }
 
@@ -81,7 +96,9 @@
 
         public function setPhone($phone) {
             if(!preg_match('/\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/', $phone)) {
-                echo "wrong phone";
+                $this->errors.array_push("phone {
+                    message: invalid phone format
+                }");
                 return;
             }
 
