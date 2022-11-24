@@ -1,7 +1,9 @@
 <?php
-    include dirname(__DIR__, 1)."/enums/Gender.php";
-    include dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
-    include "ModelInterface.php";
+    include_once dirname(__DIR__, 1)."/enums/Gender.php";
+    include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
+    include_once dirname(__DIR__, 1)."/exceptions/DBException.php";
+    include_once dirname(__DIR__, 1)."/helpers/dbStringFormat.php";
+    include_once "ModelInterface.php";
 
     class UserRegisterModel implements IModel {
         private $fullName;
@@ -11,44 +13,45 @@
         private $birthDate;
         private $gender;
         private $phoneNumber;
-        private $link;
+        private static $link;
         private $errors = array();
 
         public function __construct($data) {
+            $this->link = $GLOBALS["LINK"];
+            
             $this->setName($data->fullName);
             $this->setPassword($data->password);
-            $this->birthDate = date('y-m-d',strtotime($data->birthDate));
             $this->setGender($data->gender);
-            $this->address = $data->address;
             $this->setEmail($data->email);
             $this->setPhone($data->phoneNumber);
 
+            $this->birthDate = (strlen($data->birthDate)) ? date('y-m-d',strtotime($data->birthDate)) : null;
+            $this->address = (strlen($data->address)) ? $data->address : null;
+
             if ($this->errors) {
                 throw new InvalidDataException(
-                    json_encode(array("errors" => $this->errors))
+                    "One or more registration errors occured",
+                    "400",
+                    array("errors" => $this->errors)
                 );
             }
-
-            $this->link = $GLOBALS["LINK"];
         }
 
-        public function exists() {
-            return $this->link->query("SELECT id FROM USERS WHERE email='$this->email'")->fetch_assoc();
+        public function exists($email) {
+            return $this->link->query("SELECT id FROM USERS WHERE email='$email'")->fetch_assoc();
         }
 
         public function store() {
-            return (!$this->exists()) ? 
             $this->link->query("INSERT INTO USERS(name, birthdate, gender, phone, email, adress, password) 
                 VALUES(
-                    '$this->fullName',
-                    '$this->birthDate',
-                    '$this->gender',
-                    '$this->phoneNumber',
-                    '$this->email',
-                    '$this->address',
+                    '$this->fullName',"
+                    .formatDbNullableString($this->birthDate).",
+                    '$this->gender',"
+                    .formatDbNullableString($this->phoneNumber).",
+                    '$this->email',"
+                    .formatDbNullableString($this->address).",
                     '$this->password'
-            )") :
-            null;
+            )");
         }
 
         public function setName($name) {
@@ -84,6 +87,14 @@
                 return;
             }
 
+            if ($this->exists($email)) {
+                $this->errors["email"] = 
+                    (object) [
+                        "message" => "$email is already taken"
+                    ];
+                return;
+            } 
+
             $this->email = $email;
         }
 
@@ -100,6 +111,8 @@
         }
 
         public function setPhone($phone) {
+            if(!strlen($phone)) return null;
+
             if(!preg_match('/\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/', $phone)) {
                 $this->errors["phone"] = 
                     (object) [

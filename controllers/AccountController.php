@@ -5,9 +5,11 @@
         public static function getResponse($method, $urlList, $requestData) {
             $response = null;
             
-            /* implement error throwing */
             if (!$urlList) {
-                throw new NonExistingURLException("URL doesn't exists");
+                throw new NonExistingURLException(
+                    "URL doesn't exists", 
+                    "404"
+                );
             }
             
             switch($method) {
@@ -18,11 +20,18 @@
                         case "register":                             
                             $response = AccountService::register($requestData->body);
                             break;
+                        default:
+                            throw new NonExistingURLException(
+                                "URL doesn't exists: /".implode("/", $urlList),
+                                "404"
+                            );
                         }
                     break;
                 default:
-                    throw new NonExistingURLException("URL doesn't exists".implode("/", $urlList));
-                    break;
+                    throw new NonExistingURLException(
+                        "URL doesn't exists: \n\t".implode("/", $urlList), 
+                        "404"
+                    );
             }
             return json_encode($response);
         }

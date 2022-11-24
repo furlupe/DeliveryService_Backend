@@ -5,10 +5,7 @@
         public static function register($data) : array {
             $user = new UserRegisterModel($data);
 
-            /* implement error throwing */
-            if(!$user->store()) {
-                return array();
-            }
+            $user->store();
             
             /* move code on lines 12-25 to the login() func when it's implemented */
             $token = Token::generateJWT(

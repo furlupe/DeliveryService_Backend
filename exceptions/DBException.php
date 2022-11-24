@@ -1,6 +1,6 @@
 <?php
     include_once "ExtendedExceptionInterface.php";
-    class NonExistingURLException extends Exception implements IExtendedException {
+    class DBException extends Exception implements IExtendedException {
         private $data;
         public function __construct($message, $code = 0, $extras = null, Throwable $prev = null) {
             parent::__construct($message, $code, $prev);

@@ -1,5 +1,7 @@
 <?php
     include_once "routers/AccountRouter.php";
+    include_once "helpers/headers.php";
+    include_once "exceptions/ExtendedExceptionInterface.php";
 
     const ip = "127.0.0.1";
     const username = "backend_food";
@@ -57,7 +59,11 @@
             $requestData
         );
     }
-    catch (Throwable $e) {
-        echo $e->__toString();
+    catch (IExtendedException $e) {
+        setHTPPStatus(
+            $e->getCode(), 
+            $e->getMessage(), 
+            $e->getData()
+        );
     }
 ?>
