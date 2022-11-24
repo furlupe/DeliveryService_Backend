@@ -1,5 +1,6 @@
 <?php
     include dirname(__DIR__, 1)."/enums/Gender.php";
+    include dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
     include "ModelInterface.php";
 
     class UserRegisterModel implements IModel {
@@ -14,21 +15,21 @@
         private $errors = array();
 
         public function __construct($data) {
-                $this->setName($data->fullName);
-                $this->setPassword($data->password);
-                $this->birthDate = date('y-m-d',strtotime($data->birthDate));
-                $this->setGender($data->gender);
-                $this->address = $data->address;
-                $this->setEmail($data->email);
-                $this->setPhone($data->phoneNumber);
+            $this->setName($data->fullName);
+            $this->setPassword($data->password);
+            $this->birthDate = date('y-m-d',strtotime($data->birthDate));
+            $this->setGender($data->gender);
+            $this->address = $data->address;
+            $this->setEmail($data->email);
+            $this->setPhone($data->phoneNumber);
 
-                if ($this->errors) {
-                    throw new InvalidDataException(
-                        json_encode(array("errors" => $this->errors))
-                    );
-                }
+            if ($this->errors) {
+                throw new InvalidDataException(
+                    json_encode(array("errors" => $this->errors))
+                );
+            }
 
-                $this->link = $GLOBALS["LINK"];
+            $this->link = $GLOBALS["LINK"];
         }
 
         public function exists() {
@@ -52,9 +53,10 @@
 
         public function setName($name) {
             if(strlen($name) < 1) {
-                $this->errors.array_push("name: {
-                    message: name too short
-                }");
+                $this->errors["name"] = 
+                    (object) [
+                        "message" => "name too short"
+                    ];
                 return;
             }
 
@@ -63,9 +65,10 @@
 
         public function setPassword($password) {
             if(strlen($password) < 6) {
-                $this->errors.array_push("password {
-                    message: password too short
-                }");
+                $this->errors["password"] = 
+                    (object) [
+                        "message" => "password too short"
+                    ];
                 return;
             }
 
@@ -74,9 +77,10 @@
 
         public function setEmail($email) {
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $this->errors.array_push("email {
-                    message: invalid email
-                }");
+                $this->errors["email"] = 
+                    (object) [
+                        "message" => "invalid email"
+                    ];
                 return;
             }
 
@@ -85,9 +89,10 @@
 
         public function setGender($gender) {
             if(!Gender::checkIfExists($gender)) {
-                $this->errors.array_push("gender {
-                    message: invalid gender
-                }");
+                $this->errors["gender"] = 
+                    (object) [
+                        "message" => "invalid gender"
+                    ];
                 return;
             }
 
@@ -96,9 +101,10 @@
 
         public function setPhone($phone) {
             if(!preg_match('/\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/', $phone)) {
-                $this->errors.array_push("phone {
-                    message: invalid phone format
-                }");
+                $this->errors["phone"] = 
+                    (object) [
+                        "message" => "invalid phone"
+                    ];
                 return;
             }
 
