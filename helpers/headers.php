@@ -11,6 +11,9 @@
             case "404":
                 $status = "HTTP/1.0 404 Not Found";
                 break;
+            case "401":
+                    $status = "HTTP/1.0 401 Unauthorized";
+                    break;
             case "500":
                 $status = "HTTP/1.0 500 Internal Server Error";
                 break;
