@@ -11,20 +11,19 @@
 
             $user->store();
             
-            $logdata = array(
-                "email" => $data->email,
-                "password" => $data->password
-            );
+            $logdata = new stdClass();
+            $logdata->email = $data->email;
+            $logdata->password = $data->password;
 
             return self::login($logdata);
         }
         
         public static function login($data) : array {
-            if (!isset($data->email)) {
+            if (empty($data->email)) {
                 throw new InvalidDataException("Email field is empty");
             }
 
-            if (!isset($data->password)) {
+            if (empty($data->password)) {
                 throw new InvalidDataException("Password field is empty");
             }
 

@@ -46,7 +46,7 @@
             }
 
             if($GLOBALS["LINK"]->query(
-                "SELECT value FROM BLACKLIST WHERE value='$hash'"
+                "SELECT * FROM BLACKLIST WHERE value="."'$token'"
             )->fetch_assoc()) {
                 return null;
             }
