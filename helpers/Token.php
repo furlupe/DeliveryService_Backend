@@ -1,13 +1,17 @@
 <?php
     class Token {
-        public static function storeTokenOnEmail($email, $token) {
+        public static function forbidToken($email, $token) {
             $id = self::getIdByEmail($email)['id'];
             $GLOBALS["LINK"]->query(
-                "INSERT INTO TOKENS(value, userID) VALUES ('$token', '$id')"
+                "INSERT INTO BLACKLIST(value, userID) VALUES ('$token', '$id')"
             );
         }
 
-        public static function generateJWT($headers, $payload, $secret="morbius") : string {
+        public static function generateJWT($payload, $secret="morbius") : string {
+            $headers = array(
+                "alg" => "HS256",
+                "typ" => "JWT"
+            );
             $headers_enc = self::base64url_encode(json_encode($headers));
             $payload_enc = self::base64url_encode(json_encode($payload));
     
