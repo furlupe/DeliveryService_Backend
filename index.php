@@ -1,9 +1,19 @@
 <?php
-    include "routers/AccountRouter.php";
+    include_once "routers/AccountRouter.php";
+    include_once "helpers/headers.php";
+    include_once "exceptions/ExtendedExceptionInterface.php";
+
+    const ip = "127.0.0.1";
+    const username = "backend_food";
+    const password = "password";
+    const db = "backend_food";
+
+    global $LINK;
+
     function getData($method) {
         $data = new stdClass();
         if ($method != "GET") {
-            $data = json_decode(file_get_contents('php://input'));
+            $data->body = json_decode(file_get_contents('php://input'));
         }
 
         $data->params = [];
@@ -23,6 +33,9 @@
     }
 
     header('Content-type: application/json');
+
+    $LINK = new mysqli(ip, username, password, db);
+    $REQUESTS_CALLBACKS = array();
 
     $method = $_SERVER['REQUEST_METHOD'];
     $url = rtrim(
@@ -53,5 +66,4 @@
             $e->getData()
         );
     }
-    
 ?>
