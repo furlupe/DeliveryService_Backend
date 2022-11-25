@@ -38,5 +38,12 @@
 
             return array("token" => $token);
         }
+
+        public static function logout($token) {
+            $GLOBALS["LINK"]->query(
+                "INSERT INTO BLACKLIST(value) VALUES ('$token')"
+            );
+            return array("message" => "logout successful");
+        }
     }
 ?>

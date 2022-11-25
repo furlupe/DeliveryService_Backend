@@ -23,6 +23,11 @@
                         case "login":                             
                             $response = AccountService::login($requestData->body);
                             break;
+                        case "logout":                             
+                            $response = AccountService::logout(
+                                explode(" ", getallheaders()["Authorization"])[1]
+                            );
+                            break;
                         default:
                             throw new NonExistingURLException(
                                 "URL doesn't exists: /".implode("/", $urlList),
