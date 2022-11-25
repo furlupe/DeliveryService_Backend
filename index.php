@@ -38,10 +38,20 @@
 
     $requestData = getData($method);
 
-    $router = determineRouter($urlList[1]);
-    $router->route(
-        $method, 
-        array_slice($urlList, 2), 
-        $requestData
-    );
+    try {
+        $router = determineRouter($urlList[1]);
+        $router->route(
+            $method, 
+            array_slice($urlList, 2), 
+            $requestData
+        );
+    }
+    catch (IExtendedException $e) {
+        setHTPPStatus(
+            $e->getCode(), 
+            $e->getMessage(), 
+            $e->getData()
+        );
+    }
+    
 ?>
