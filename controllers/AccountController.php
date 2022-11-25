@@ -12,6 +12,11 @@
                 );
             }
             
+            $token = null;
+            if(isset(getallheaders()["Authorization"])) {
+                $token = explode(" ", getallheaders()["Authorization"])[1];
+            }
+            
             switch($method) {
                 case "GET":
                     break;
@@ -34,6 +39,20 @@
                                 "404"
                             );
                         }
+                    break;
+                case "PUT":
+                    switch($urlList[0]) {
+                        case "profile":
+                            $data = $requestData->body;
+                            $data->token = $token;
+                            $response = AccountService::editProfile($data);
+                            break;
+                        default:
+                            throw new NonExistingURLException(
+                                "URL doesn't exists: /".implode("/", $urlList),
+                                "404"
+                            );
+                    }
                     break;
                 default:
                     throw new NonExistingURLException(
