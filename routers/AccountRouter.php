@@ -4,8 +4,7 @@
     class AccountRouter implements IRouter {
         
         public function route($method, $urlList, $requestData) {
-            $controller = new AccountController();
-            $controller->getResponse(
+            echo AccountController::getResponse(
                 $method,
                 $urlList,
                 $requestData

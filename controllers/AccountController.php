@@ -1,10 +1,15 @@
 <?php
+    include_once dirname(__DIR__, 1)."/services/AccountService.php";
+    include_once dirname(__DIR__, 1)."/exceptions/NonExistingURLException.php";
     class AccountController {
-        public function getResponse($method, $urlList, $requestData) {
+        public static function getResponse($method, $urlList, $requestData) {
             $response = null;
             
             if (!$urlList) {
-                return "Error occured";
+                throw new NonExistingURLException(
+                    "URL doesn't exists", 
+                    "404"
+                );
             }
             
             switch($method) {
@@ -12,11 +17,23 @@
                     break;
                 case "POST":
                     switch($urlList[0]) {
-                        
+                        case "logout":                             
+                            $response = AccountService::logout(
+                                explode(" ", getallheaders()["Authorization"])[1]
+                            );
+                            break;
+                        default:
+                            throw new NonExistingURLException(
+                                "URL doesn't exists: /".implode("/", $urlList),
+                                "404"
+                            );
                         }
                     break;
                 default:
-                    break;
+                    throw new NonExistingURLException(
+                        "URL doesn't exists: \n\t".implode("/", $urlList), 
+                        "404"
+                    );
             }
             return json_encode($response);
         }
