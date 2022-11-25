@@ -45,7 +45,7 @@
                 return null;
             }
 
-            if(!$GLOBALS["LINK"]->query(
+            if($GLOBALS["LINK"]->query(
                 "SELECT value FROM BLACKLIST WHERE value='$hash'"
             )->fetch_assoc()) {
                 return null;
