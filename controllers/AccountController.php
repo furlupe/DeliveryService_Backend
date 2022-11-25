@@ -20,6 +20,9 @@
                         case "register":                             
                             $response = AccountService::register($requestData->body);
                             break;
+                        case "login":                             
+                            $response = AccountService::login($requestData->body);
+                            break;
                         default:
                             throw new NonExistingURLException(
                                 "URL doesn't exists: /".implode("/", $urlList),
