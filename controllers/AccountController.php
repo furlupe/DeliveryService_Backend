@@ -3,45 +3,52 @@
     include_once dirname(__DIR__, 1)."/exceptions/NonExistingURLException.php";
     class AccountController {
         public static function getResponse($method, $urlList, $requestData) {
-            $response = null;
-            
             if (!$urlList) {
                 throw new NonExistingURLException(
                     "URL doesn't exists", 
                     "404"
                 );
             }
-            
+            $response = self::setResponse($method, $urlList, $requestData);
+            return json_encode($response);
+        }
+
+        private static function setResponse($method, $urlList, $requestData) {
             switch($method) {
                 case "GET":
-                    break;
+                    switch($urlList[0]) {
+                        case "profile":
+                            return;
+                        default:
+                            throw new NonExistingURLException(
+                                "URL doesn't exists",
+                                "404"
+                            );
+                    }
+
                 case "POST":
                     switch($urlList[0]) {
                         case "register":                             
-                            $response = AccountService::register($requestData->body);
-                            break;
+                            return AccountService::register($requestData->body);
                         case "login":                             
-                            $response = AccountService::login($requestData->body);
-                            break;
+                            return AccountService::login($requestData->body);
                         case "logout":                             
-                            $response = AccountService::logout(
+                            return AccountService::logout(
                                 explode(" ", getallheaders()["Authorization"])[1]
                             );
-                            break;
                         default:
                             throw new NonExistingURLException(
-                                "URL doesn't exists: /".implode("/", $urlList),
+                                "URL doesn't exists",
                                 "404"
                             );
-                        }
-                    break;
+                    }
+                    
                 default:
                     throw new NonExistingURLException(
-                        "URL doesn't exists: \n\t".implode("/", $urlList), 
+                        "URL doesn't exists", 
                         "404"
                     );
             }
-            return json_encode($response);
         }
     }
 ?>
