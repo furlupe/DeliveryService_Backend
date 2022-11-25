@@ -2,6 +2,7 @@
     include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
     class LoginCredentials {
         public static function checkExistance($email, $password) {
+            $password = hash("sha1", $password);
             if(!$GLOBALS["LINK"]->query(
                 "SELECT id 
                 FROM USERS 
