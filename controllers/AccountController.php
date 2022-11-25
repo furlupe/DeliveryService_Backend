@@ -3,6 +3,7 @@
     include_once dirname(__DIR__, 1)."/exceptions/NonExistingURLException.php";
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
     class AccountController {
+
         public static function getResponse($method, $urlList, $requestData) {
             if (!$urlList) {
                 throw new NonExistingURLException();

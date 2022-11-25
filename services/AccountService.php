@@ -42,7 +42,11 @@
             $GLOBALS["LINK"]->query(
                 "INSERT INTO BLACKLIST(value) VALUES ('$token')"
             );
-            return array("message" => "logout successful");
+            
+            return array(
+                "status" => "HTTP/1.0 200 OK",
+                "message" => "logout successful"
+            );
         }
 
         public static function getProfile($token) {
