@@ -3,6 +3,7 @@
     include_once dirname(__DIR__, 1)."/helpers/LoginCredentials.php";
     include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
     include_once dirname(__DIR__, 1)."/models/UserRegisterModel.php";
+    include_once dirname(__DIR__, 1)."/models/UserEditModel.php";
     include_once dirname(__DIR__, 1)."/models/UserDTO.php";
     class AccountService {
         public static function register($data) : array {
@@ -57,6 +58,21 @@
 
             $profile = new UserDTO($email);
             return $profile->getData();
+        }
+
+        public static function editProfile($data) {
+            $email = Token::getEmailFromToken($data->token);
+            if(!$email) {
+                throw new AuthException();
+            }
+            $data->email = $email;
+            $profile = new UserEditModel($data);
+            $profile->edit();
+
+            return array(
+                "status" => "HTTP/1.0 200 OK",
+                "message" => "edit successful"
+            );
         }
     }
 ?>

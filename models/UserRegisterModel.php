@@ -5,7 +5,7 @@
     include_once dirname(__DIR__, 1)."/helpers/dbStringFormat.php";
     include_once "ModelInterface.php";
 
-    class UserRegisterModel implements IModel {
+    class UserRegisterModel {
         private $fullName;
         private $password;
         private $email;

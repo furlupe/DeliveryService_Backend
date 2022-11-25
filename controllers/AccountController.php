@@ -40,9 +40,23 @@
                                 $token
                             );
                         default:
-                            throw new NonExistingURLException();
+                            throw new NonExistingURLException(
+                                "URL doesn't exists: /".implode("/", $urlList),
+                                "404"
+                            );
+                        }
+                case "PUT":
+                    switch($urlList[0]) {
+                        case "profile":
+                            $data = $requestData->body;
+                            $data->token = $token;
+                            return AccountService::editProfile($data);
+                        default:
+                            throw new NonExistingURLException(
+                                "URL doesn't exists: /".implode("/", $urlList),
+                                "404"
+                            );
                     }
-
                 default:
                     throw new NonExistingURLException();
             }
