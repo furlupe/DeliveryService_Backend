@@ -15,10 +15,10 @@
             if (!is_null($filters["categories"])) {
                 $categoriesId = DishQueries::getCategoriesId($filters["categories"]);
                 $c = implode(',', $categoriesId);
-                array_push($where, "category IN ($c)");
+                if (!empty($c)) array_push($where, "category IN ($c)");
             }
 
-            if (!is_null($filters["vegeterian"])) {
+            if (!is_null($filters["vegeterian"]) && !empty($filters["vegeterian"])) {
                 $isVegeterian = filter_var(
                     $filters["vegeterian"], 
                     FILTER_VALIDATE_BOOLEAN
