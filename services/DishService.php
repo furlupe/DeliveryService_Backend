@@ -32,7 +32,7 @@
                 $dbRequest = $dbRequest." WHERE $where";
             }
 
-            return $GLOBALS["LINK"]->query($dbRequest)->fetch_all(MYSQLI_ASSOC);
+            return array("dishes" => $GLOBALS["LINK"]->query($dbRequest)->fetch_all(MYSQLI_ASSOC));
         }
     }
 ?>
