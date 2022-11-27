@@ -29,7 +29,7 @@
                         throw new NonExistingURLException();
                     }
 
-                    return DishService::setRating($urlList[0], intval($requestData->ratingScore));
+                    return DishService::setRating($urlList[0], intval($requestData->params["ratingScore"]));
             }
         }
     }

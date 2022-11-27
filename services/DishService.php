@@ -27,6 +27,7 @@
             if (is_null($email)) {
                 throw new AuthException();
             }
+            
             $userId = $GLOBALS["LINK"]->query(
                 "SELECT id
                 FROM USERS
