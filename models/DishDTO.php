@@ -10,16 +10,21 @@
         private $category;
         private $rating;
 
-        public function __construct($data) {
-            $this->id = $data->id;
-            $this->name = $data->name;
-            $this->description = $data->description;
-            $this->price = intval($data->price);
-            $this->image = $data->image;
-            $this->vegeterian = boolval($data->vegeterian);
+        public function __construct($id) {
+            $data = $GLOBALS["LINK"]->query(
+                "SELECT name, description, price, image, vegeterian, category
+                FROM DISHES
+                WHERE id = $id"
+            )->fetch_assoc();
+
+            $this->id = $id;
+            $this->name = $data['name'];
+            $this->description = $data['description'];
+            $this->price = intval($data['price']);
+            $this->image = $data['image'];
+            $this->vegeterian = boolval($data['vegeterian']);
             $this->rating = $this->countRating();
-            $this->id = $data->id;
-            $this->category = DishCategory::getCategory($data->category);
+            $this->category = DishCategory::getCategory($data['category']);
         }
 
         public function getData() {

@@ -30,7 +30,7 @@
             foreach($this->getDishes($filters) as $key => $value) {
                 array_push(
                     $this->dishes, 
-                    (new DishDTO((object) $value))->getData()
+                    (new DishDTO($value["id"]))->getData()
                 );
             }
 
@@ -65,6 +65,7 @@
         public function getData() {
             $r = array();
             foreach(get_object_vars($this) as $key => $value) {
+                if($key == "errors") continue;
                 $r[$key] = $value;
             }
 
@@ -72,7 +73,7 @@
         }
         private function getDishes($filters) {
             $dbRequest = array(
-                "SELECT" => "id, name, price, description, vegeterian, image, category",
+                "SELECT" => "id",
                 "FROM" => "DISHES"
             );
             

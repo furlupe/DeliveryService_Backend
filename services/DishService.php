@@ -14,5 +14,9 @@
             $list = new DishPagedListDTO($filters);
             return $list->getData();
         }
+
+        public static function getDish($id) : array {
+            return array();
+        }
     }
 ?>
