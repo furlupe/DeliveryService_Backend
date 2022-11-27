@@ -5,7 +5,7 @@
         private $current;
 
         public function __construct($size, $page) {
-            $this->size = 3;
+            $this->size = 2;
             $this->count = $this->getCount($size);
             $this->current = intval($page);
         }

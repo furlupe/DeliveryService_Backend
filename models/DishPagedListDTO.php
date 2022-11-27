@@ -9,13 +9,11 @@
         // 2 - vegeterian
         // 3 - sorting
         // 4 - page
-        const orderingGroupByClauses = array(
+        const dbOrderClauses = array(
             "NameAsc" => "name ASC",
             "NameDesc" => "name DESC",
             "PriceAsc" => "price ASC",
             "PriceDesc" => "price DESC",
-            "RatingAsc" => "rating ASC",
-            "RatingDesc" => "rating DESC"
         );
         private $dishes;
         private $pagination;
@@ -28,6 +26,20 @@
                     $this->dishes, 
                     (new DishDTO((object) $value))->getData()
                 );
+            }
+
+            $sort = $filters["sorting"];
+            if (!is_null($sort)) {
+                switch($sort) {
+                    case "RatingAsc":
+                        $this->priceSort($this->dishes, 1);
+                        break;
+                    case "RatingDesc":
+                        $this->priceSort($this->dishes, -1);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             $this->pagination = (new PageInfoModel(sizeof($this->dishes), $filters["page"]))->getData();
@@ -52,11 +64,16 @@
                 "FROM" => "DISHES"
             );
             
-            $where = $this->setWhere($filters);
+            $where = $this->getWhere($filters);
             if($where) $dbRequest["WHERE"] = implode(" AND ", $where);
-
+            
             if (!is_null($filters["sorting"])) {
-                $dbRequest["ORDER BY"] = self::orderingGroupByClauses[$filters["sorting"]];
+
+                if (array_key_exists(
+                        $filters["sorting"], 
+                        self::dbOrderClauses)) {
+                    $dbRequest["ORDER BY"] = self::dbOrderClauses[$filters["sorting"]];
+                }
             }
 
             $dbRequest = implode(
@@ -68,10 +85,10 @@
                     array_keys($dbRequest),
                     array_values($dbRequest)
                 ));
-
+            
             return $GLOBALS["LINK"]->query($dbRequest)->fetch_all(MYSQLI_ASSOC);
         } 
-        private function setWhere($filters) {
+        private function getWhere($filters) {
             $where = array();
 
             if (!is_null($filters["categories"])) {
@@ -90,6 +107,26 @@
             }
 
             return $where;
+        }
+
+        private function priceSort(&$array, $dir) {
+            if ($dir == 1) {
+                usort($array, function ($a, $b) {
+                    return $this->cmp($a, $b, 1);
+                });
+            } elseif ($dir == -1) {
+                usort($array, function ($a, $b) {  
+                    return $this->cmp($a, $b, -1);
+                });
+            }
+        }
+
+        private function cmp($a, $b, $dir) {
+            if ($a["rating"] == $b["rating"]) {
+                return 0;
+            }
+
+            return (($a["rating"] < $b["rating"]) ? -1 : 1) * $dir;
         }
     }
 ?>
