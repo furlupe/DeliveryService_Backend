@@ -14,10 +14,10 @@
             $this->id = $data->id;
             $this->name = $data->name;
             $this->description = $data->description;
-            $this->price = $data->price;
+            $this->price = intval($data->price);
             $this->image = $data->image;
-            $this->vegeterian = $data->vegeterian;
-            //$this->rating = $data->rating;
+            $this->vegeterian = boolval($data->vegeterian);
+            $this->rating = $this->countRating();
             $this->id = $data->id;
             $this->category = DishCategory::getCategory($data->category);
         }
@@ -29,6 +29,14 @@
             }
 
             return $r;
+        }
+
+        private function countRating() {
+            return floatval(
+                $GLOBALS["LINK"]->query(
+                    "SELECT AVG(value) as rating FROM RATING WHERE dishId = $this->id"
+                )->fetch_assoc()["rating"]
+            );
         }
     }
 ?>
