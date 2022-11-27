@@ -42,8 +42,9 @@
         }
 
         public function store() {
-            $this->link->query("INSERT INTO USERS(name, birthdate, gender, phone, email, adress, password) 
+            $this->link->query("INSERT INTO USERS(id, name, birthdate, gender, phone, email, adress, password) 
                 VALUES(
+                    UUID(),
                     '$this->fullName',"
                     .formatDbNullableString($this->birthDate).",
                     '$this->gender',"
