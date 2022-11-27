@@ -1,5 +1,6 @@
 <?php
     include_once dirname(__DIR__, 1)."/enums/DishCategory.php";
+    include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
     class DishDTO {
         private $id;
         private $name;
@@ -14,8 +15,12 @@
             $data = $GLOBALS["LINK"]->query(
                 "SELECT name, description, price, image, vegeterian, category
                 FROM DISHES
-                WHERE id = $id"
+                WHERE id = '$id'"
             )->fetch_assoc();
+
+            if (is_null($data)) {
+                throw new InvalidDataException("No such dish exists");
+            }
 
             $this->id = $id;
             $this->name = $data['name'];
@@ -39,7 +44,7 @@
         private function countRating() {
             return floatval(
                 $GLOBALS["LINK"]->query(
-                    "SELECT AVG(value) as rating FROM RATING WHERE dishId = $this->id"
+                    "SELECT AVG(value) as rating FROM RATING WHERE dishId = '$this->id'"
                 )->fetch_assoc()["rating"]
             );
         }

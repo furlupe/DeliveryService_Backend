@@ -16,7 +16,8 @@
         }
 
         public static function getDish($id) : array {
-            return array();
+            $dish = new DishDTO($id);
+            return $dish->getData();
         }
     }
 ?>

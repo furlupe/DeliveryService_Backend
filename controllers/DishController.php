@@ -20,6 +20,10 @@
                     if(empty($urlList)) {
                         return DishService::getDishList($requestData->params);
                     }
+                    if (!preg_match($GLOBALS["UUID_REGEX"], $urlList[0])) {
+                        throw new NonExistingURLException();
+                    }
+                    return DishService::getDish($urlList[0]);
                 case "POST":
                     return array();
             }
