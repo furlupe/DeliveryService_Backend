@@ -23,16 +23,18 @@
         }
 
         public static function setRating($id, $rating) : array {
-            $email = Token::getEmailFromToken($GLOBALS["USER_TOKEN"]);
-            if (is_null($email)) {
+            if($rating < 1 || $rating > 10) {
+                throw new URLParametersException(
+                    extras: array("errors" => array(
+                        "rating" => "rating is not in range [1, 10]"
+                    ))
+                );
+            }
+
+            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
+            if (is_null($userId)) {
                 throw new AuthException();
             }
-            
-            $userId = $GLOBALS["LINK"]->query(
-                "SELECT id
-                FROM USERS
-                WHERE email='$email'"
-            )->fetch_assoc()['id'];
 
             $exists = $GLOBALS["LINK"]->query(
                 "SELECT 1
@@ -61,7 +63,7 @@
 
             return array(
                 "status" => "HTTP/1.0 200 OK",
-                "message" => "Rating set: '$rating'"
+                "message" => "Rating set: $rating"
             );
         }
     }

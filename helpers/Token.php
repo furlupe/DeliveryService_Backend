@@ -54,6 +54,15 @@
             return $decoded["payload"]['email'];
         }
 
+        public static function getIdFromToken($token) {
+            $email = self::getEmailFromToken($GLOBALS["USER_TOKEN"]);
+
+            return $GLOBALS["LINK"]->query(
+                "SELECT id
+                FROM USERS
+                WHERE email='$email'"
+            )->fetch_assoc()['id'];
+        }
         private static function base64url_encode($str) : string {
             return str_replace(
                 ['+', '/', '='],
