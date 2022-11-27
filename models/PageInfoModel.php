@@ -1,4 +1,5 @@
 <?php
+    include_once dirname(__DIR__, 1)."/exceptions/URLParametersException.php";
     class PageInfoModel {
         private $size;
         private $count;
@@ -7,6 +8,16 @@
         public function __construct($size, $page) {
             $this->size = 2;
             $this->count = $this->getCount($size);
+
+            $page = intval($page);
+            if($page > $this->count) {
+                throw new URLParametersException(
+                    extras: array("errors" => array(
+                        "page" => "Page index is greater than amount of pages"
+                    ))
+                );
+            }
+
             $this->current = intval($page);
         }
 

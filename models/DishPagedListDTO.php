@@ -2,6 +2,8 @@
     include_once "DishDTO.php";
     include_once "PageInfoModel.php";
     include_once dirname(__DIR__, 1)."/dbQueries/DishQueries.php";
+    include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
+    include_once dirname(__DIR__, 1)."/exceptions/URLParametersException.php";
     class DishPagedListDTO {
 
         // filter ordering:
@@ -18,8 +20,12 @@
         private $dishes;
         private $pagination;
 
+        private $errors;
+
         public function __construct($filters) {     
+            
             $this->dishes = array();
+            $this->errors = array();
 
             foreach($this->getDishes($filters) as $key => $value) {
                 array_push(
@@ -38,8 +44,14 @@
                         $this->priceSort($this->dishes, -1);
                         break;
                     default:
-                        break;
+                        if (!array_key_exists($sort, self::dbOrderClauses)) {
+                            $this->errors["sorting"] = "No such sorting exists";
+                        }
                 }
+            }
+
+            if (!empty($this->errors)) {
+                throw new URLParametersException(extras: array("errors" => $this->errors));
             }
 
             $this->pagination = (new PageInfoModel(sizeof($this->dishes), $filters["page"]))->getData();

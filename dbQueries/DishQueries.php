@@ -1,4 +1,5 @@
 <?php
+    include_once dirname(__DIR__, 1)."/exceptions/URLParametersException.php";
     Class DishQueries {
         public static function getCategoriesId($categories) {
             $categories = array_map(
@@ -9,7 +10,7 @@
             );
             $categories = implode(" OR value=", $categories);
 
-            return array_column(
+            $r = array_column(
                 $GLOBALS["LINK"]->query(
                     "SELECT id 
                     FROM CATEGORIES 
@@ -17,6 +18,13 @@
                 )->fetch_all(MYSQLI_ASSOC),
                 'id'
             );
+
+            if(!$r) throw new URLParametersException(extras: array(
+                "errors" => array(
+                    "category" => "No such category exists"
+                )
+            ));
+            return $r;
         }
     }
 ?>
