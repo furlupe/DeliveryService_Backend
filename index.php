@@ -11,6 +11,7 @@
 
     global $LINK;
     global $UUID_REGEX;
+    global $USER_TOKEN;
 
     function getData($method) {
         $data = new stdClass();
@@ -53,8 +54,8 @@
     header('Content-type: application/json');
 
     $LINK = new mysqli(ip, username, password, db);
-    $UUID_REGEX = "/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/";
-    $REQUESTS_CALLBACKS = array();
+    $UUID_REGEX = "/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/";
+    $USER_TOKEN = explode(" ", getallheaders()["Authorization"])[1];
 
     $method = $_SERVER['REQUEST_METHOD'];
     $url = rtrim(
