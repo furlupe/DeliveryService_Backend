@@ -7,9 +7,9 @@
             $basket = $GLOBALS["LINK"]->query(
                 "SELECT dishId, amount
                 FROM BASKET
-                WHERE userId = $userId"
+                WHERE userId = '$userId'"
             )->fetch_all(MYSQLI_ASSOC);
-
+            
             $response = array();
             foreach($basket as $key => $value) {
                 array_push(

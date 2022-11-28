@@ -1,18 +1,18 @@
 <?php
     include_once "BasicDTO.php";
     class DishBasketDTO extends BasicDTO {
-        private $id;
-        private $name;
-        private $price;
-        private $totalPrice;
-        private $amount;
-        private $image;
+        protected $id;
+        protected $name;
+        protected $price;
+        protected $totalPrice;
+        protected $amount;
+        protected $image;
 
         public function __construct($id, $amount) {
             $dish = $GLOBALS["LINK"]->query(
                 "SELECT name, price, image
                 FROM DISHES
-                WHERE id=$id"
+                WHERE id='$id'"
             )->fetch_assoc();
 
             $this->id = $id;

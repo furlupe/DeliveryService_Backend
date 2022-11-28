@@ -4,7 +4,7 @@
 
     class BasketRouter implements IRouter {
         public function route($method, $urlList, $requestData) {
-            echo BasketController::getResponse(
+            echo (new BasketController())->getResponse(
                 $method,
                 $urlList,
                 $requestData

@@ -44,7 +44,7 @@
 
     function determineRouter($key) : IRouter {
         switch($key) {
-            case "dish":
+            case "basket":
                 return new BasketRouter();
             default:
                 throw new NonExistingURLException();
