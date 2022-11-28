@@ -1,5 +1,5 @@
 <?php
     interface IRouter {
-        public function route();
+        public function route($method, $urlList, $requestData);
     }
 ?>
