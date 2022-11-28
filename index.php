@@ -39,4 +39,5 @@
 
     $requestData = getData($method);
     determineRouter($urlList[1])->route();
+    
 ?>
