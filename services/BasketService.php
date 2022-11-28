@@ -57,5 +57,30 @@
                 "status" => "HTTP/1.0 200 OK",
                 "message" => "Dish added");
         }
+
+        public static function removeDish($id, $decrease) {
+            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
+            if(is_null($userId)) {
+                throw new AuthException();
+            }
+            echo $decrease;
+            if ($decrease) {
+                $GLOBALS["LINK"]->query(
+                    "UPDATE BASKET
+                    SET amount=amount-1
+                    WHERE userId='$userId' AND dishId='$id'"
+                );
+            } else {
+                $GLOBALS["LINK"]->query(
+                    "DELETE FROM BASKET
+                    WHERE userId='$userId' AND dishId='$id'"
+                );
+            }
+
+            return array(
+                "status" => "HTTP/1.0 200 OK",
+                "message" => "Dish removed"
+            );
+        }
     }
 ?>
