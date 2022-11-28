@@ -13,7 +13,16 @@
                     }
                     return BasketService::getBasket();
                 case "POST":
-                    return array();
+                    if(empty($urlList)) {
+                        throw new NonExistingURLException(); 
+                    }
+
+                    $r = joinRegex("/^dish\//", $GLOBALS["UUID_REGEX"]);
+                    $r = joinRegex($r, "/$/");
+                    if (!preg_match($r, implode("/",$urlList))) {
+                        throw new NonExistingURLException();
+                    }
+                    return BasketService::addDish($urlList[1]);
             }
         }
     }
