@@ -12,7 +12,8 @@
             $user = $GLOBALS["LINK"]->query(
                 "SELECT id, name, birthdate, gender, phone, email, adress 
                 FROM USERS 
-                WHERE email='$email'"
+                WHERE email=?",
+                array($email)
             )->fetch_assoc();
 
             $this->id = $user['id'];

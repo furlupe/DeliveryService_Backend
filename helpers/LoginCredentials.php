@@ -4,9 +4,11 @@
         public static function checkExistance($email, $password) {
             $password = hash("sha1", $password);
             if(!$GLOBALS["LINK"]->query(
-                "SELECT id 
-                FROM USERS 
-                WHERE email='$email' AND password='$password'")->num_rows) {
+                "SELECT *
+                FROM USERS
+                WHERE email=? AND password=?",
+                array($email, $password)
+            )) {
                     throw new InvalidDataException("Wrong E-mail or password", "400");
                 }
             return true;

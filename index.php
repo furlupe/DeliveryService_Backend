@@ -1,6 +1,7 @@
 <?php
     include_once "routers/AccountRouter.php";
     include_once "helpers/headers.php";
+    include_once "helpers/ESQL.php";
     include_once "exceptions/ExtendedExceptionInterface.php";
 
     const ip = "127.0.0.1";
@@ -34,7 +35,7 @@
 
     header('Content-type: application/json');
 
-    $LINK = new mysqli(ip, username, password, db);
+    $LINK = new ESQL(ip, username, password, db);
     $REQUESTS_CALLBACKS = array();
 
     $method = $_SERVER['REQUEST_METHOD'];

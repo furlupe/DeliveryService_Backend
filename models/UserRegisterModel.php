@@ -38,21 +38,26 @@
         }
 
         public function exists($email) {
-            return $this->link->query("SELECT id FROM USERS WHERE email='$email'")->fetch_assoc();
+            return $this->link->query(
+                "SELECT id 
+                FROM USERS 
+                WHERE email=?",
+                array($email))->fetch_assoc();
         }
 
         public function store() {
             $this->link->query("INSERT INTO USERS(id, name, birthdate, gender, phone, email, adress, password) 
-                VALUES(
-                    UUID(),
-                    '$this->fullName',"
-                    .formatDbNullableString($this->birthDate).",
-                    '$this->gender',"
-                    .formatDbNullableString($this->phoneNumber).",
-                    '$this->email',"
-                    .formatDbNullableString($this->address).",
-                    '$this->password'
-            )");
+                VALUES(UUID(), ?, ?, ?, ?, ?, ?, ?)",
+                array(
+                    $this->fullName,
+                    formatDbNullableString($this->birthDate),
+                    $this->gender,
+                    formatDbNullableString($this->phoneNumber),
+                    $this->email,
+                    formatDbNullableString($this->address),
+                    $this->password
+                )
+            );
         }
 
         public function setName($name) {

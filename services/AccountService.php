@@ -39,9 +39,7 @@
         }
 
         public static function logout($token) {
-            $GLOBALS["LINK"]->query(
-                "INSERT INTO BLACKLIST(value) VALUES ('$token')"
-            );
+            Token::forbidToken($token);
             
             return array(
                 "status" => "HTTP/1.0 200 OK",

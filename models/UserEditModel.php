@@ -31,13 +31,16 @@
         }
         public function edit() {
             $this->link->query("UPDATE USERS 
-                SET 
-                name='$this->fullName', 
-                birthdate='$this->birthDate',
-                gender='$this->gender',
-                phone='$this->phoneNumber',
-                adress='$this->address'
-                WHERE email='$this->email'"
+                SET name=?, birthdate=?, gender=?, phone=?, adress=?
+                WHERE email=?",
+                array(
+                    $this->fullName, 
+                    $this->birthDate,
+                    $this->gender,
+                    $this->phoneNumber,
+                    $this->address,
+                    $this->email
+                )
             );
         }
 

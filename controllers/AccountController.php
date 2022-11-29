@@ -1,10 +1,11 @@
 <?php
     include_once dirname(__DIR__, 1)."/services/AccountService.php";
+    include_once "BasicController.php";
     include_once dirname(__DIR__, 1)."/exceptions/NonExistingURLException.php";
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
-    class AccountController {
+    class AccountController extends BasicController {
 
-        public static function getResponse($method, $urlList, $requestData) {
+        public function getResponse($method, $urlList, $requestData) {
             if (!$urlList) {
                 throw new NonExistingURLException();
             }
@@ -12,7 +13,7 @@
             return json_encode($response);
         }
 
-        private static function setResponse($method, $urlList, $requestData) {
+        protected function setResponse($method, $urlList, $requestData) {
             if(isset(getallheaders()["Authorization"])) {
                 $token = explode(" ", getallheaders()["Authorization"])[1];
             }
