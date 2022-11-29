@@ -1,11 +1,10 @@
 <?php
     class Token {
         private static $key = "morbius";
-        public static function forbidToken($email, $token) {
-            $id = self::getIdByEmail($email)['id'];
+        public static function forbidToken($token) {
             $GLOBALS["LINK"]->query(
-                "INSERT INTO BLACKLIST(value, userID) VALUES (?, ?)",
-                array($token, $id)
+                "INSERT INTO BLACKLIST(value) VALUES (?)",
+                array($token)
             );
         }
 
@@ -47,7 +46,7 @@
             }
 
             if($GLOBALS["LINK"]->query(
-                "SELECT * FROM BLACKLIST WHERE value="."?",
+                "SELECT * FROM BLACKLIST WHERE value=?",
                 array($token)
             )->fetch_assoc()) {
                 return null;

@@ -2,7 +2,7 @@
     include_once dirname(__DIR__, 1)."/exceptions/NonExistingURLException.php";
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
     include_once dirname(__DIR__, 1)."/services/DishService.php";
-    include_once dirname(__DIR__, 1)."/helpers/regexFormatting.php";
+    include_once dirname(__DIR__, 1)."/utils/regexFormatting.php";
     include_once "BasicController.php";
 
     class DishController extends BasicController{

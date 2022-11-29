@@ -10,6 +10,9 @@
             $this->count = $this->getCount($size);
 
             $page = intval($page);
+            if ($size == 0) {
+                $page = 0;
+            }
             if($page > $this->count) {
                 throw new URLParametersException(
                     extras: array("errors" => array(

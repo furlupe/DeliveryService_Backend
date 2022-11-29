@@ -2,7 +2,8 @@
     include_once dirname(__DIR__, 1)."/models/DishPagedListDTO.php";
     include_once dirname(__DIR__, 1)."/exceptions/URLParametersException.php";
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
-    include_once dirname(__DIR__, 1)."/helpers/Token.php";
+    include_once dirname(__DIR__, 1)."/utils/Token.php";
+    include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
     class DishService {
         public static function getDishList($filters) : array {
             if (!isset($filters["page"]) || empty($filters["page"])) {
@@ -60,10 +61,7 @@
                 );
             }
 
-            return array(
-                "status" => "HTTP/1.0 200 OK",
-                "message" => "Rating set: $rating"
-            );
+            return (new BasicResponse("Rating set: $rating"))->getData();
         }
     }
 ?>
