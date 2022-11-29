@@ -7,12 +7,15 @@
         }
 
         public function query($request, $params) {
-            $this->stmt = $this->link->prepare($request); 
+            $this->stmt = $this->link->prepare($request);
+            $types = "";
             foreach($params as $key => $value) {
                 $type = "s";
                 if(is_int($value)) $type = "i";
-                $this->stmt->bind_param($type, $value);
+                $types = $types.$type;
             }
+            
+            $this->stmt->bind_param($types, ...$params);
             $this->stmt->execute();
 
             return $this;

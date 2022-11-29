@@ -1,7 +1,9 @@
 <?php
-    include_once dirname(__DIR__, 1)."/helpers/Token.php";
+    include_once dirname(__DIR__, 1)."/utils/Token.php";
     include_once dirname(__DIR__, 1)."/models/DishBasketDTO.php";
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
+    include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
+
     class BasketService {
         public static function getBasket() {
             $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
@@ -57,9 +59,7 @@
                 );
             }
 
-            return array(
-                "status" => "HTTP/1.0 200 OK",
-                "message" => "Dish added");
+            return (new BasicResponse("Dish added"))->getData();
         }
 
         public static function removeDish($id, $decrease) {
@@ -83,10 +83,7 @@
                 );
             }
 
-            return array(
-                "status" => "HTTP/1.0 200 OK",
-                "message" => "Dish removed"
-            );
+            return (new BasicResponse("Dish removed"))->getData();
         }
     }
 ?>
