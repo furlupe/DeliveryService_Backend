@@ -1,12 +1,13 @@
 <?php
-    class UserDTO {
-        private $id;
-        private $fullName;
-        private $birthDate;
-        private $gender;
-        private $address;
-        private $email;
-        private $phoneNumber;
+    include_once "BasicDTO.php";
+    class UserDTO extends BasicDTO{
+        protected $id;
+        protected $fullName;
+        protected $birthDate;
+        protected $gender;
+        protected $address;
+        protected $email;
+        protected $phoneNumber;
 
         public function __construct($email) {
             $user = $GLOBALS["LINK"]->query(
@@ -23,15 +24,6 @@
             $this->email = $user['email'];
             $this->address = $user['adress'];
             $this->birthDate = $user['birthdate'];
-        }
-
-        public function getData() {
-            $r = array();
-            foreach(get_object_vars($this) as $key => $value) {
-                $r[$key] = $value;
-            }
-
-            return $r;
         }
     }
 ?>

@@ -2,8 +2,7 @@
     include_once dirname(__DIR__, 1)."/enums/Gender.php";
     include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
     include_once dirname(__DIR__, 1)."/exceptions/DBException.php";
-    include_once dirname(__DIR__, 1)."/helpers/dbStringFormat.php";
-    include_once "ModelInterface.php";
+    include_once dirname(__DIR__, 1)."/utils/dbStringFormat.php";
 
     class UserRegisterModel {
         private $fullName;

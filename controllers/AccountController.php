@@ -14,18 +14,14 @@
         }
 
         protected function setResponse($method, $urlList, $requestData) {
-            if(isset(getallheaders()["Authorization"])) {
-                $token = explode(" ", getallheaders()["Authorization"])[1];
-            }
-
             switch($method) {
                 case "GET":
                     switch($urlList[0]) {
                         case "profile":
-                            if(!isset($token)) {
+                            if(!isset($GLOBALS["USER_TOKEN"])) {
                                 throw new AuthException();
                             }
-                            return AccountService::getProfile($token);
+                            return AccountService::getProfile($GLOBALS["USER_TOKEN"]);
                         default:
                             throw new NonExistingURLException();
                     }
@@ -38,7 +34,7 @@
                             return AccountService::login($requestData->body);
                         case "logout":                             
                             return AccountService::logout(
-                                $token
+                                $GLOBALS["USER_TOKEN"]
                             );
                         default:
                             throw new NonExistingURLException(
@@ -50,7 +46,7 @@
                     switch($urlList[0]) {
                         case "profile":
                             $data = $requestData->body;
-                            $data->token = $token;
+                            $data->token = $GLOBALS["USER_TOKEN"];
                             return AccountService::editProfile($data);
                         default:
                             throw new NonExistingURLException(

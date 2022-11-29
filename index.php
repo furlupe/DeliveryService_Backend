@@ -1,8 +1,9 @@
 <?php
     include_once "routers/AccountRouter.php";
-    include_once "helpers/headers.php";
-    include_once "helpers/ESQL.php";
+    include_once "utils/headers.php";
+    include_once "utils/ESQL.php";
     include_once "exceptions/ExtendedExceptionInterface.php";
+    include_once "utils/Request.php";
 
     const ip = "127.0.0.1";
     const username = "backend_food";
@@ -10,55 +11,16 @@
     const db = "backend_food";
 
     global $LINK;
-
-    function getData($method) {
-        $data = new stdClass();
-        if ($method != "GET") {
-            $data->body = json_decode(file_get_contents('php://input'));
-        }
-
-        $data->params = [];
-        foreach($_GET as $key => $value) {
-            if ($key == "q") continue;
-            $data->params[$key] = $value;
-        }
-
-        return $data;
-    }
-
-    function determineRouter($key) {
-        switch($key) {
-            case "account":
-                return new AccountRouter();
-        }
-    }
+    global $USER_TOKEN;
 
     header('Content-type: application/json');
 
     $LINK = new ESQL(ip, username, password, db);
-    $REQUESTS_CALLBACKS = array();
-
-    $method = $_SERVER['REQUEST_METHOD'];
-    $url = rtrim(
-        isset($_GET['q']) ? $_GET['q'] : '',
-        '/'
-    );
-    $urlList = explode('/', $url);
-
-    if ($urlList[0] != "api") {
-        echo "wrong endpoint";
-        exit;
-    }
-
-    $requestData = getData($method);
+    $USER_TOKEN = explode(" ", getallheaders()["Authorization"])[1];
 
     try {
-        $router = determineRouter($urlList[1]);
-        $router->route(
-            $method, 
-            array_slice($urlList, 2), 
-            $requestData
-        );
+        $request = new Request();
+        $request->callRouter();
     }
     catch (IExtendedException $e) {
         setHTPPStatus(

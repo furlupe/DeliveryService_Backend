@@ -1,10 +1,11 @@
 <?php
-    include_once dirname(__DIR__, 1)."/helpers/Token.php";
-    include_once dirname(__DIR__, 1)."/helpers/LoginCredentials.php";
+    include_once dirname(__DIR__, 1)."/utils/Token.php";
+    include_once dirname(__DIR__, 1)."/utils/LoginCredentials.php";
     include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
     include_once dirname(__DIR__, 1)."/models/UserRegisterModel.php";
     include_once dirname(__DIR__, 1)."/models/UserEditModel.php";
     include_once dirname(__DIR__, 1)."/models/UserDTO.php";
+    include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
     class AccountService {
         public static function register($data) : array {
             $user = new UserRegisterModel($data);
@@ -41,10 +42,7 @@
         public static function logout($token) {
             Token::forbidToken($token);
             
-            return array(
-                "status" => "HTTP/1.0 200 OK",
-                "message" => "logout successful"
-            );
+            return (new BasicResponse("Logout successful"))->getData();
         }
 
         public static function getProfile($token) {
@@ -66,10 +64,7 @@
             $profile = new UserEditModel($data);
             $profile->edit();
 
-            return array(
-                "status" => "HTTP/1.0 200 OK",
-                "message" => "edit successful"
-            );
+            return (new BasicResponse("Edit successful"))->getData();
         }
     }
 ?>
