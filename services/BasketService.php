@@ -12,8 +12,9 @@
             $basket = $GLOBALS["LINK"]->query(
                 "SELECT dishId, amount
                 FROM BASKET
-                WHERE userId = '$userId'"
-            )->fetch_all(MYSQLI_ASSOC);
+                WHERE userId = ?",
+                array($userId)
+            )->fetch();
             
             $response = array();
             foreach($basket as $key => $value) {
@@ -36,20 +37,23 @@
             $exists = $GLOBALS["LINK"]->query(
                 "SELECT 1
                 FROM BASKET
-                WHERE userId='$userId' AND dishId='$id'
-                LIMIT 1"
-            )->fetch_assoc();
+                WHERE userId=? AND dishId=?
+                LIMIT 1",
+                array($userId, $id)
+            )->fetch();
 
             if($exists) {
                 $GLOBALS["LINK"]->query(
                     "UPDATE BASKET
                     SET amount=amount+1
-                    WHERE userId='$userId' AND dishId='$id'"
+                    WHERE userId=? AND dishId=?",
+                    array($userId, $id)
                 );
             } else {
                 $GLOBALS["LINK"]->query(
                     "INSERT INTO BASKET(userId, dishId, amount)
-                    VALUES ('$userId', '$id', 1)"
+                    VALUES (?, ?, ?)",
+                    array($userId, $id, 1)
                 );
             }
 
@@ -68,12 +72,14 @@
                 $GLOBALS["LINK"]->query(
                     "UPDATE BASKET
                     SET amount=amount-1
-                    WHERE userId='$userId' AND dishId='$id'"
+                    WHERE userId=? AND dishId=?",
+                    array($userId, $id)
                 );
             } else {
                 $GLOBALS["LINK"]->query(
                     "DELETE FROM BASKET
-                    WHERE userId='$userId' AND dishId='$id'"
+                    WHERE userId=? AND dishId=?",
+                    array($userId, $id)
                 );
             }
 
