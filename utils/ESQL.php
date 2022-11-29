@@ -2,6 +2,7 @@
     class ESQL {
         private $link;
         private $stmt;
+        private $result;
         public function __construct($id, $username, $password, $db) {
             $this->link = new mysqli($id, $username, $password, $db);
         }
@@ -15,20 +16,19 @@
                 $types = $types.$type;
             }
             
-            if (count($params) > 0) {
-                $this->stmt->bind_param($types, ...$params);
-            }
-            
+            $this->stmt->bind_param($types, ...$params);
             $this->stmt->execute();
 
-            return $this->stmt->get_result();
+            $this->result = $this->stmt->get_result();
+
+            return $this;
         }
 
         public function fetch_assoc() {
-            return $this->stmt->get_result()->fetch_assoc();
+            return $this->result->fetch_assoc();
         }
         public function fetch_all() {
-            return $this->stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            return $this->result->fetch_all(MYSQLI_ASSOC);
         }
         
     }
