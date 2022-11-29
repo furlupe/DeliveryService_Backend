@@ -21,7 +21,7 @@
             
             $this->stmt->execute();
 
-            return $this;
+            return $this->stmt->get_result();
         }
 
         public function fetch_assoc() {
