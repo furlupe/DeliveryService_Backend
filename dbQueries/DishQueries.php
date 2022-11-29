@@ -2,19 +2,27 @@
     include_once dirname(__DIR__, 1)."/exceptions/URLParametersException.php";
     Class DishQueries {
         public static function getCategoriesId($categories) {
-            $categories = array_map(
-                function($x) {
-                    return "'$x'";
-                }, 
-                $categories
-            );
-            $categories = implode(" OR value=", $categories);
+            $signs = '?';
+            if(!is_string($categories)) {
+                $categories = array_map(
+                    function($x) {
+                        return "'$x'";
+                    }, 
+                    $categories
+                );
+                $signs = array();
+                $signs = array_fill(0, count($categories), '?');
+                $signs = implode(" OR value=", $signs);
+            } else {
+                $categories = [$categories];
+            }
 
             $r = array_column(
                 $GLOBALS["LINK"]->query(
                     "SELECT id 
                     FROM CATEGORIES 
-                    WHERE value=".$categories
+                    WHERE value=".$signs,
+                    $categories
                 )->fetch_all(MYSQLI_ASSOC),
                 'id'
             );

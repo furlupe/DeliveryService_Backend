@@ -39,25 +39,24 @@
             $exists = $GLOBALS["LINK"]->query(
                 "SELECT 1
                 FROM RATING
-                WHERE userId='$userId' AND dishId='$id'
-                LIMIT 1"
+                WHERE userId=? AND dishId=?
+                LIMIT 1",
+                array($userId, $id)
             );
 
             if($exists->num_rows) {
                 $GLOBALS["LINK"]->query(
                     "UPDATE RATING
                     SET value='$rating'
-                    WHERE userId='$userId' AND dishId='$id'"
+                    WHERE userId=? AND dishId=?",
+                    array($userId, $id)
                 );
 
             } else {
                 $GLOBALS["LINK"]->query(
                     "INSERT INTO RATING(userId, dishId, value)
-                    VALUES (
-                        '$userId',
-                        '$id',
-                        '$rating'
-                    )"
+                    VALUES (?, ?, ?)",
+                    array($userId, $id, $rating)
                 );
             }
 

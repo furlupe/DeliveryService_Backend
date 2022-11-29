@@ -15,7 +15,8 @@
             $data = $GLOBALS["LINK"]->query(
                 "SELECT name, description, price, image, vegeterian, category
                 FROM DISHES
-                WHERE id = '$id'"
+                WHERE id = ?",
+                array($id)
             )->fetch_assoc();
 
             if (is_null($data)) {
@@ -44,7 +45,8 @@
         private function countRating() {
             return floatval(
                 $GLOBALS["LINK"]->query(
-                    "SELECT AVG(value) as rating FROM RATING WHERE dishId = '$this->id'"
+                    "SELECT AVG(value) as rating FROM RATING WHERE dishId = ?",
+                    array($this->id)
                 )->fetch_assoc()["rating"]
             );
         }

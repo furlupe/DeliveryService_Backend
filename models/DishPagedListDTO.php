@@ -99,7 +99,7 @@
                     array_values($dbRequest)
                 ));
             
-            return $GLOBALS["LINK"]->query($dbRequest)->fetch_all(MYSQLI_ASSOC);
+            return $GLOBALS["LINK"]->query($dbRequest, [])->fetch_all(MYSQLI_ASSOC);
         } 
         private function getWhere($filters) {
             $where = array();

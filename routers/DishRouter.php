@@ -3,7 +3,7 @@
     include_once "RouterInterface.php";
     class DishRouter implements IRouter {
         public function route($method, $urlList, $requestData) {
-            echo DishController::getResponse(
+            echo (new DishController())->getResponse(
                 $method, 
                 $urlList, 
                 $requestData
