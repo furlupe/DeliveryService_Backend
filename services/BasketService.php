@@ -14,7 +14,7 @@
                 FROM BASKET
                 WHERE userId = ?",
                 array($userId)
-            )->fetch();
+            )->fetch_all();
             
             $response = array();
             foreach($basket as $key => $value) {
@@ -40,7 +40,7 @@
                 WHERE userId=? AND dishId=?
                 LIMIT 1",
                 array($userId, $id)
-            )->fetch();
+            )->fetch_assoc();
 
             if($exists) {
                 $GLOBALS["LINK"]->query(

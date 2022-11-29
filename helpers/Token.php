@@ -4,7 +4,8 @@
         public static function forbidToken($email, $token) {
             $id = self::getIdByEmail($email)['id'];
             $GLOBALS["LINK"]->query(
-                "INSERT INTO BLACKLIST(value, userID) VALUES ('$token', '$id')"
+                "INSERT INTO BLACKLIST(value, userID) VALUES (?, ?)",
+                array($token, $id)
             );
         }
 
@@ -46,7 +47,8 @@
             }
 
             if($GLOBALS["LINK"]->query(
-                "SELECT * FROM BLACKLIST WHERE value="."'$token'"
+                "SELECT * FROM BLACKLIST WHERE value="."?",
+                array($token)
             )->fetch_assoc()) {
                 return null;
             }
@@ -57,11 +59,7 @@
         public static function getIdFromToken($token) {
             $email = self::getEmailFromToken($GLOBALS["USER_TOKEN"]);
 
-            return $GLOBALS["LINK"]->query(
-                "SELECT id
-                FROM USERS
-                WHERE email='$email'"
-            )->fetch_assoc()['id'];
+            return self::getIdByEmail($email);
         }
         private static function base64url_encode($str) : string {
             return str_replace(
@@ -81,8 +79,9 @@
 
         private static function getIdByEmail($email) {
             return $GLOBALS["LINK"]->query(
-                "SELECT id FROM USERS WHERE email='$email'"
-            )->fetch_assoc();
+                    "SELECT id FROM USERS WHERE email=?",
+                    array($email)
+                )->fetch_assoc()["id"];
         }
 
         private static function makeSignature($headers, $payload) {

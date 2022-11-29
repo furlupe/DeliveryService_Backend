@@ -13,7 +13,8 @@
             $dish = $GLOBALS["LINK"]->query(
                 "SELECT name, price, image
                 FROM DISHES
-                WHERE id='$id'"
+                WHERE id=?",
+                array($id)
             )->fetch_assoc();
 
             if (is_null($dish)) {
