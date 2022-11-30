@@ -11,11 +11,13 @@
 
     global $LINK;
     global $USER_TOKEN;
+    global $UUID_REGEX;
 
     header('Content-type: application/json');
 
     $LINK = new ESQL(ip, username, password, db);
     $USER_TOKEN = explode(" ", getallheaders()["Authorization"])[1];
+    $UUID_REGEX = "/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/";
 
     try {
         (new Request())->callRouter();
