@@ -87,7 +87,6 @@
             )->fetch_all();
 
             foreach($prices as $key => $value) {
-                echo json_encode($value).PHP_EOL;
                 $this->price += intval($value["price"]) * intval($value["amount"]);
             }
         }
