@@ -1,5 +1,6 @@
 <?php
     include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
+    include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
     include_once dirname(__DIR__, 1)."/utils/Token.php";
     include_once dirname(__DIR__, 1)."/models/OrderInfoDTO.php";
     include_once dirname(__DIR__, 1)."/models/OrderDTO.php";
@@ -7,11 +8,11 @@
 
     class OrderService {
         public static function getOrders() {
-            if(is_null($GLOBALS["USER_TOKEN"])) {
+            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
+
+            if(is_null($userId)) {
                 throw new AuthException();
             }
-
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
 
             $orders = $GLOBALS["LINK"]->query(
                 "SELECT id
@@ -32,7 +33,7 @@
         }
 
         public static function getOrder($id) {
-            if(is_null($GLOBALS["USER_TOKEN"])) {
+            if(is_null(Token::getIdFromToken($GLOBALS["USER_TOKEN"]))) {
                 throw new AuthException();
             }
 
@@ -40,11 +41,10 @@
         }
 
         public static function createOrder($data) {
-            if(is_null($GLOBALS["USER_TOKEN"])) {
+            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
+            if(is_null($userId)) {
                 throw new AuthException();
             }
-
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
             $order = new OrderModel($data, $userId);
             $order->createOrder();
             
