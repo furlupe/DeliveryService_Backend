@@ -14,11 +14,11 @@
                 "SELECT name, price, image
                 FROM DISHES
                 WHERE id=?",
-                array($id)
+                $id
             )->fetch_assoc();
 
             if (is_null($dish)) {
-                throw new InvalidDataException("No such dish exists");
+                throw new NonExistingURLException("No such dish exists");
             }
 
 

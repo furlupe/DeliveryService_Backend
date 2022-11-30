@@ -2,6 +2,7 @@
     include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
     include_once dirname(__DIR__, 1)."/utils/Token.php";
     include_once dirname(__DIR__, 1)."/models/OrderInfoDTO.php";
+    include_once dirname(__DIR__, 1)."/models/OrderDTO.php";
 
     class OrderService {
         public static function getOrders() {
@@ -25,7 +26,7 @@
         }
 
         public static function getOrder($id) {
-            return array();
+            return (new OrderDTO($id))->getData();
         }
 
         public static function createOrder() {

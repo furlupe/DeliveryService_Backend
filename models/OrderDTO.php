@@ -7,8 +7,8 @@
         protected $orderTime;
         protected $status;
         protected $price;
-        protected $dishes;
         protected $address;
+        protected $dishes;
 
         public function __construct($id) {
             $order = $GLOBALS["LINK"]->query(
