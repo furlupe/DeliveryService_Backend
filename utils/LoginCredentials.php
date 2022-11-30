@@ -8,7 +8,7 @@
                 FROM USERS
                 WHERE email=? AND password=?",
                 array($email, $password)
-            )) {
+            )->num_rows()) {
                     throw new InvalidDataException("Wrong E-mail or password", "400");
                 }
             return true;

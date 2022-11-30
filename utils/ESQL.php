@@ -20,8 +20,11 @@
             $this->stmt->execute();
 
             $this->result = $this->stmt->get_result();
-
             return $this;
+        }
+
+        public function num_rows() {
+            return $this->result->num_rows;
         }
 
         public function fetch_assoc() {
