@@ -19,6 +19,9 @@
 
                     return OrderService::getOrder($urlList[0]);
                 case "POST":
+                    if (empty($urlList)) {
+                        return OrderService::createOrder($requestData->body);
+                    }
                     return array();
                 default:
                     throw new NonExistingURLException();
