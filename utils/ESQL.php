@@ -24,6 +24,10 @@
             return $this;
         }
 
+        public function num_rows() {
+            return $this->result->num_rows;
+        }
+
         public function fetch_assoc() {
             return $this->result->fetch_assoc();
         }
