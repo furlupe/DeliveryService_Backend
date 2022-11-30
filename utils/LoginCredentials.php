@@ -7,7 +7,7 @@
                 "SELECT *
                 FROM USERS
                 WHERE email=? AND password=?",
-                array($email, $password)
+                $email, $password
             )) {
                     throw new InvalidDataException("Wrong E-mail or password", "400");
                 }

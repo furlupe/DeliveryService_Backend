@@ -1,5 +1,6 @@
 <?php
     include_once "exceptions/NonExistingUrlException.php";
+    include_once dirname(__DIR__, 1)."/routers/OrderRouter.php";
     class Request {
         private $method;
         private $uri;
@@ -46,7 +47,7 @@
         private function determineRouter() {
             switch($this->uri[1]) {
                 case "account":
-                    return new AccountRouter();
+                    return new OrderRouter();
             }
         }
     }

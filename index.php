@@ -1,5 +1,4 @@
 <?php
-    include_once "routers/AccountRouter.php";
     include_once "utils/headers.php";
     include_once "utils/ESQL.php";
     include_once "exceptions/ExtendedExceptionInterface.php";
@@ -19,14 +18,9 @@
     $USER_TOKEN = explode(" ", getallheaders()["Authorization"])[1];
 
     try {
-        $request = new Request();
-        $request->callRouter();
+        (new Request())->callRouter();
     }
     catch (IExtendedException $e) {
-        setHTPPStatus(
-            $e->getCode(), 
-            $e->getMessage(), 
-            $e->getData()
-        );
+        $e->sendHTTP();
     }
 ?>
