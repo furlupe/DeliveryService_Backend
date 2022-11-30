@@ -1,5 +1,8 @@
 <?php
-    include_once dirname(__DIR__, 1)."/utils/BasisResponse.php";
+    include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
+    include_once dirname(__DIR__, 1)."/utils/Token.php";
+    include_once dirname(__DIR__, 1)."/models/OrderInfoDTO.php";
+
     class OrderService {
         public static function getOrders() {
             $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
@@ -9,7 +12,7 @@
                 where userId=?",
                 $userId
             )->fetch_all();
-
+            
             $response = array();
             foreach($orders as $key => $value) {
                 array_push(
@@ -17,7 +20,7 @@
                     (new OrderInfoDTO($value['id']))->getData()
                 );
             }
-            
+
             return $response;
         }
 

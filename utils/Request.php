@@ -46,7 +46,7 @@
 
         private function determineRouter() {
             switch($this->uri[1]) {
-                case "account":
+                case "order":
                     return new OrderRouter();
             }
         }

@@ -8,7 +8,7 @@
             switch($method) {
                 case "GET":
                     if (empty($urlList)) {
-                        OrderService::getOrders();
+                        return OrderService::getOrders();
                     }
                 case "POST":
                     return array();

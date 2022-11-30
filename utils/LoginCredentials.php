@@ -9,7 +9,7 @@
                 WHERE email=? AND password=?",
                 $email, $password
             )) {
-                    throw new InvalidDataException("Wrong E-mail or password", "400");
+                    throw new InvalidDataException("Wrong E-mail or password");
                 }
             return true;
         }

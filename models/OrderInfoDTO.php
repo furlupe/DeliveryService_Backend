@@ -2,11 +2,11 @@
     include_once "BasicDTO.php";
     include_once dirname(__DIR__, 1)."/utils/Token.php";
     class OrderInfoDTO extends BasicDTO {
-        private $id;
-        private $deliveryTime;
-        private $orderTime;
-        private $status;
-        private $price;
+        protected $id;
+        protected $deliveryTime;
+        protected $orderTime;
+        protected $status;
+        protected $price;
 
         public function __construct($id) {
             $order = $GLOBALS["LINK"]->query(
