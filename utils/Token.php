@@ -48,7 +48,7 @@
             if($GLOBALS["LINK"]->query(
                 "SELECT * FROM BLACKLIST WHERE value=?",
                 array($token)
-            )->fetch_assoc()) {
+            )->num_rows()) {
                 return null;
             }
 
