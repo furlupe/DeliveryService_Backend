@@ -42,7 +42,7 @@
                 FROM RATING
                 WHERE userId=? AND dishId=?
                 LIMIT 1",
-                array($userId, $id)
+                $userId, $id
             );
 
             if($exists->num_rows) {
@@ -50,14 +50,14 @@
                     "UPDATE RATING
                     SET value='$rating'
                     WHERE userId=? AND dishId=?",
-                    array($userId, $id)
+                    $userId, $id
                 );
 
             } else {
                 $GLOBALS["LINK"]->query(
                     "INSERT INTO RATING(userId, dishId, value)
                     VALUES (?, ?, ?)",
-                    array($userId, $id, $rating)
+                    $userId, $id, $rating
                 );
             }
 

@@ -21,9 +21,9 @@
                 $GLOBALS["LINK"]->query(
                     "SELECT id 
                     FROM CATEGORIES 
-                    WHERE value=".$signs,
-                    $categories
-                )->fetch_all(MYSQLI_ASSOC),
+                    WHERE value=?",
+                    $signs, $categories
+                )->fetch_all(),
                 'id'
             );
 

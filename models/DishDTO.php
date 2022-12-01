@@ -15,8 +15,8 @@
             $data = $GLOBALS["LINK"]->query(
                 "SELECT name, description, price, image, vegeterian, category
                 FROM DISHES
-                WHERE id = ?",
-                array($id)
+                WHERE id=?",
+                $id
             )->fetch_assoc();
 
             if (is_null($data)) {
@@ -46,7 +46,7 @@
             return floatval(
                 $GLOBALS["LINK"]->query(
                     "SELECT AVG(value) as rating FROM RATING WHERE dishId = ?",
-                    array($this->id)
+                    $this->id
                 )->fetch_assoc()["rating"]
             );
         }

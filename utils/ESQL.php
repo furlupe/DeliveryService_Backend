@@ -7,7 +7,7 @@
             $this->link = new mysqli($id, $username, $password, $db);
         }
 
-        public function query($request, $params) {
+        public function query($request, ...$params) {
             $this->stmt = $this->link->prepare($request);
             $types = "";
             foreach($params as $key => $value) {
