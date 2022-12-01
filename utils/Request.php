@@ -48,6 +48,8 @@
             switch($this->uri[1]) {
                 case "order":
                     return new OrderRouter();
+                default:
+                    throw new NonExistingURLException();
             }
         }
     }
