@@ -15,7 +15,7 @@
                 "SELECT dishId, amount
                 FROM BASKET
                 WHERE userId = ?",
-                array($userId)
+                $userId
             )->fetch_all();
             
             $response = array();
@@ -41,7 +41,7 @@
                 FROM BASKET
                 WHERE userId=? AND dishId=?
                 LIMIT 1",
-                array($userId, $id)
+                $userId, $id
             )->fetch_assoc();
 
             if($exists) {
@@ -49,13 +49,13 @@
                     "UPDATE BASKET
                     SET amount=amount+1
                     WHERE userId=? AND dishId=?",
-                    array($userId, $id)
+                    $userId, $id
                 );
             } else {
                 $GLOBALS["LINK"]->query(
                     "INSERT INTO BASKET(userId, dishId, amount)
                     VALUES (?, ?, ?)",
-                    array($userId, $id, 1)
+                    $userId, $id, 1
                 );
             }
 
@@ -73,13 +73,13 @@
                     "UPDATE BASKET
                     SET amount=amount-1
                     WHERE userId=? AND dishId=?",
-                    array($userId, $id)
+                    $userId, $id
                 );
             } else {
                 $GLOBALS["LINK"]->query(
                     "DELETE FROM BASKET
                     WHERE userId=? AND dishId=?",
-                    array($userId, $id)
+                    $userId, $id
                 );
             }
 

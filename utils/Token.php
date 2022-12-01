@@ -47,8 +47,8 @@
 
             if($GLOBALS["LINK"]->query(
                 "SELECT * FROM BLACKLIST WHERE value=?",
-                array($token)
-            )->num_rows()) {
+                $token
+            )->fetch_assoc()) {
                 return null;
             }
 
@@ -79,7 +79,7 @@
         private static function getIdByEmail($email) {
             return $GLOBALS["LINK"]->query(
                     "SELECT id FROM USERS WHERE email=?",
-                    array($email)
+                    $email
                 )->fetch_assoc()["id"];
         }
 

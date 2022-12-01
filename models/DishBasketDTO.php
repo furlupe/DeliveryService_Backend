@@ -14,7 +14,7 @@
                 "SELECT name, price, image
                 FROM DISHES
                 WHERE id=?",
-                array($id)
+                $id
             )->fetch_assoc();
 
             if (is_null($dish)) {
