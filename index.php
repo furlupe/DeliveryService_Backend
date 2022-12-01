@@ -23,10 +23,6 @@
         $request->callRouter();
     }
     catch (IExtendedException $e) {
-        setHTPPStatus(
-            $e->getCode(), 
-            $e->getMessage(), 
-            $e->getData()
-        );
+        $e->sendHTTP();
     }
 ?>
