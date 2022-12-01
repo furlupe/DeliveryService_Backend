@@ -48,6 +48,8 @@
             switch($this->uri[1]) {
                 case "basket":
                     return new BasketRouter();
+                default:
+                    throw new NonExistingURLException();
             }
         }
     }
