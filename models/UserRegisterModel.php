@@ -1,7 +1,6 @@
 <?php
     include_once dirname(__DIR__, 1)."/enums/Gender.php";
     include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
-    include_once dirname(__DIR__, 1)."/exceptions/DBException.php";
     include_once dirname(__DIR__, 1)."/utils/dbStringFormat.php";
 
     class UserRegisterModel {
@@ -24,13 +23,12 @@
             $this->setEmail($data->email);
             $this->setPhone($data->phoneNumber);
 
-            $this->birthDate = (strlen($data->birthDate)) ? date('y-m-d',strtotime($data->birthDate)) : null;
+            $this->setDate($data->birthDate);
             $this->address = (strlen($data->address)) ? $data->address : null;
 
             if ($this->errors) {
                 throw new InvalidDataException(
                     "One or more registration errors occured",
-                    "400",
                     array("errors" => $this->errors)
                 );
             }
@@ -57,7 +55,22 @@
             );
         }
 
-        public function setName($name) {
+        private function setDate($date) {
+            $d = DateTime::createFromFormat('Y-m-d', $date);
+            if(strlen($date) < 1) {
+                $this->birthDate = null;
+            }
+            if (!$d) {
+                $this->errors["birthdate"] = 
+                    (object) [
+                        "message" => "wrong birthdate"
+                    ];
+                return;
+            }
+
+            $this->birthDate = $d->format('Y-m-d');
+        }
+        private function setName($name) {
             if(strlen($name) < 1) {
                 $this->errors["name"] = 
                     (object) [
@@ -69,7 +82,7 @@
             $this->fullName = $name;
         }
 
-        public function setPassword($password) {
+        private function setPassword($password) {
             if(strlen($password) < 6) {
                 $this->errors["password"] = 
                     (object) [
@@ -81,7 +94,7 @@
             $this->password = hash("sha1", $password);
         }
 
-        public function setEmail($email) {
+        private function setEmail($email) {
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $this->errors["email"] = 
                     (object) [
@@ -101,7 +114,7 @@
             $this->email = $email;
         }
 
-        public function setGender($gender) {
+        private function setGender($gender) {
             if(!Gender::checkIfExists($gender)) {
                 $this->errors["gender"] = 
                     (object) [
@@ -113,7 +126,7 @@
             $this->gender = $gender;
         }
 
-        public function setPhone($phone) {
+        private function setPhone($phone) {
             if(!strlen($phone)) return null;
 
             if(!preg_match('/\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/', $phone)) {
