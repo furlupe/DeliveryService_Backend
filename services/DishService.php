@@ -45,7 +45,7 @@
                 $userId, $id
             );
 
-            if($exists->num_rows) {
+            if($exists->num_rows()) {
                 $GLOBALS["LINK"]->query(
                     "UPDATE RATING
                     SET value='$rating'
