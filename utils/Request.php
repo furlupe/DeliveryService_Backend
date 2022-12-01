@@ -29,20 +29,34 @@
             );
         }
 
-        private function getData() {
+        function getData() {
             $data = new stdClass();
             if ($this->method != "GET") {
                 $data->body = json_decode(file_get_contents('php://input'));
             }
-
+    
             $data->params = [];
-            foreach($_GET as $key => $value) {
+            $q = explode("&", $_SERVER["REDIRECT_QUERY_STRING"]);
+            $parsedQ = array();
+            foreach($q as $key => $value) {
+                $p = explode("=", $value);
+                if (!isset($parsedQ[$p[0]])) {
+                    $parsedQ[$p[0]] = array();
+                }
+                array_push($parsedQ[$p[0]], $p[1]);
+            }
+    
+            foreach($parsedQ as $key => $value) {
                 if ($key == "q") continue;
+                if (count($value) == 1) {
+                    $data->params[$key] = $value[0];
+                    continue;
+                }
                 $data->params[$key] = $value;
             }
-
+    
             return $data;
-        }
+        }    
 
         private function determineRouter() {
             switch($this->uri[1]) {

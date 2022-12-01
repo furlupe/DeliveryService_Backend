@@ -9,14 +9,16 @@
 
         public function query($request, ...$params) {
             $this->stmt = $this->link->prepare($request);
-            $types = "";
-            foreach($params as $key => $value) {
-                $type = "s";
-                if(is_int($value)) $type = "i";
-                $types = $types.$type;
+            if (count($params) > 0) {
+                $types = "";
+                foreach($params as $key => $value) {
+                    $type = "s";
+                    if(is_int($value)) $type = "i";
+                    $types = $types.$type;
+                }
+                
+                $this->stmt->bind_param($types, ...$params);
             }
-            
-            $this->stmt->bind_param($types, ...$params);
             $this->stmt->execute();
 
             $this->result = $this->stmt->get_result();

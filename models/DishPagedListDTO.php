@@ -98,13 +98,13 @@
                     array_keys($dbRequest),
                     array_values($dbRequest)
                 ));
-            
-            return $GLOBALS["LINK"]->query($dbRequest, [])->fetch_all(MYSQLI_ASSOC);
+
+            return $GLOBALS["LINK"]->query($dbRequest)->fetch_all();
         } 
         private function getWhere($filters) {
             $where = array();
 
-            if (!is_null($filters["categories"])) {
+            if (!is_null($filters["categories"]) && !empty($filters["categories"])) {
                 $categoriesId = DishQueries::getCategoriesId($filters["categories"]);
                 $c = implode(',', $categoriesId);
                 if (!empty($c)) array_push($where, "category IN ($c)");
