@@ -33,14 +33,12 @@
             $this->link->query("UPDATE USERS 
                 SET name=?, birthdate=?, gender=?, phone=?, adress=?
                 WHERE email=?",
-                array(
-                    $this->fullName, 
-                    $this->birthDate,
-                    $this->gender,
-                    $this->phoneNumber,
-                    $this->address,
-                    $this->email
-                )
+                $this->fullName, 
+                $this->birthDate,
+                $this->gender,
+                $this->phoneNumber,
+                $this->address,
+                $this->email
             );
         }
 

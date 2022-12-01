@@ -4,7 +4,7 @@
         public static function forbidToken($token) {
             $GLOBALS["LINK"]->query(
                 "INSERT INTO BLACKLIST(value) VALUES (?)",
-                array($token)
+                $token
             );
         }
 

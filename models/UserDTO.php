@@ -14,7 +14,7 @@
                 "SELECT id, name, birthdate, gender, phone, email, adress 
                 FROM USERS 
                 WHERE email=?",
-                array($email)
+                $email
             )->fetch_assoc();
 
             $this->id = $user['id'];

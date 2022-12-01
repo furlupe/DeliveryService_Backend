@@ -41,21 +41,19 @@
                 "SELECT id 
                 FROM USERS 
                 WHERE email=?",
-                array($email))->fetch_assoc();
+                $email)->fetch_assoc();
         }
 
         public function store() {
             $this->link->query("INSERT INTO USERS(id, name, birthdate, gender, phone, email, adress, password) 
                 VALUES(UUID(), ?, ?, ?, ?, ?, ?, ?)",
-                array(
-                    $this->fullName,
-                    formatDbNullableString($this->birthDate),
-                    $this->gender,
-                    formatDbNullableString($this->phoneNumber),
-                    $this->email,
-                    formatDbNullableString($this->address),
-                    $this->password
-                )
+                $this->fullName,
+                formatDbNullableString($this->birthDate),
+                $this->gender,
+                formatDbNullableString($this->phoneNumber),
+                $this->email,
+                formatDbNullableString($this->address),
+                $this->password
             );
         }
 
