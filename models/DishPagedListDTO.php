@@ -1,9 +1,9 @@
 <?php
     include_once "DishDTO.php";
     include_once "PageInfoModel.php";
-    include_once dirname(__DIR__, 1)."/dbQueries/DishQueries.php";
     include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
     include_once dirname(__DIR__, 1)."/exceptions/URLParametersException.php";
+    include_once dirname(__DIR__, 1)."/enums/DishCategory.php";
     class DishPagedListDTO {
 
         // filter ordering:
@@ -19,7 +19,6 @@
         );
         private $dishes;
         private $pagination;
-
         private $errors;
 
         public function __construct($filters) {     
@@ -73,7 +72,7 @@
         }
         private function getDishes($filters) {
             $dbRequest = array(
-                "SELECT" => "id",
+                "SELECT" => "*",
                 "FROM" => "DISHES"
             );
             
@@ -105,7 +104,7 @@
             $where = array();
 
             if (!is_null($filters["categories"]) && !empty($filters["categories"])) {
-                $categoriesId = DishQueries::getCategoriesId($filters["categories"]);
+                $categoriesId = DishCategory::getCategoriesId($filters["categories"]);
                 $c = implode(',', $categoriesId);
                 if (!empty($c)) array_push($where, "category IN ($c)");
             }

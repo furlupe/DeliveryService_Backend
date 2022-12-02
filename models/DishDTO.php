@@ -1,5 +1,6 @@
 <?php
     include_once dirname(__DIR__, 1)."/enums/DishCategory.php";
+    include_once dirname(__DIR__, 1)."/queries/DishQueries.php";
     include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
     class DishDTO {
         private $id;
@@ -12,12 +13,7 @@
         private $rating;
 
         public function __construct($id) {
-            $data = $GLOBALS["LINK"]->query(
-                "SELECT name, description, price, image, vegeterian, category
-                FROM DISHES
-                WHERE id=?",
-                $id
-            )->fetch_assoc();
+            $data = DishQueries::getDish($id);
 
             if (is_null($data)) {
                 throw new InvalidDataException("No such dish exists");

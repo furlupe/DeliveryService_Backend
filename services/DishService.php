@@ -4,6 +4,7 @@
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
     include_once dirname(__DIR__, 1)."/utils/Token.php";
     include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
+    include_once dirname(__DIR__, 1)."/queries/DishQueries.php";
     class DishService {
         public static function getDishList($filters) : array {
             if (!isset($filters["page"]) || empty($filters["page"])) {
@@ -37,36 +38,7 @@
                 throw new AuthException();
             }
 
-            $GLOBALS["LINK"]->query(
-                "INSERT INTO RATING(userId, dishId, value)
-                VALUES (?, ?, ?)
-                ON DUPLICATE KEY UPDATE value=?",
-                $userId, $id, $rating, $rating
-            );
-
-            /*$exists = $GLOBALS["LINK"]->query(
-                "SELECT 1
-                FROM RATING
-                WHERE userId=? AND dishId=?
-                LIMIT 1",
-                $userId, $id
-            );
-
-            if($exists->num_rows()) {
-                $GLOBALS["LINK"]->query(
-                    "UPDATE RATING
-                    SET value='$rating'
-                    WHERE userId=? AND dishId=?",
-                    $userId, $id
-                );
-
-            } else {
-                $GLOBALS["LINK"]->query(
-                    "INSERT INTO RATING(userId, dishId, value)
-                    VALUES (?, ?, ?)",
-                    $userId, $id, $rating
-                );
-            }*/
+            DishQueries::setRating($userId, $id, $rating);
 
             return (new BasicResponse("Rating set: $rating"))->getData();
         }
@@ -77,12 +49,8 @@
                 throw new AuthException();
             }
 
-            return $GLOBALS["LINK"]->query(
-                "SELECT dishId
-                FROM USER_DISH_ORDERED
-                WHERE userId=? AND dishId=?",
-                $userId, $dishId
-            )->num_rows() > 0;
+            return DishQueries::getUserDishOrdered(
+                $userId, $dishId)->num_rows() > 0;
         }
     }
 ?>
