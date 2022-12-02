@@ -5,6 +5,7 @@
     include_once dirname(__DIR__, 1)."/models/OrderInfoDTO.php";
     include_once dirname(__DIR__, 1)."/models/OrderDTO.php";
     include_once dirname(__DIR__, 1)."/models/OrderModel.php";
+    include_once dirname(__DIR__, 1)."/enums/OrderStatus.php";
 
     class OrderService {
         public static function getOrders() {
@@ -52,6 +53,24 @@
         }
 
         public static function confirmOrder($id) {
+            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
+            if(is_null($userId)) {
+                throw new AuthException();
+            }
+
+            $GLOBALS["LINK"]->query(
+                "UPDATE ORDERS
+                SET status=?
+                WHERE id=? AND userId = ?",
+                OrderStatus::Delivered, $id, $userId
+            );
+
+            $GLOBALS["LINK"]->query(
+                "INSERT INTO USER_DISH_ORDERED(userId, dishId)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE userId=userId"
+            );
+            
             return (new BasicResponse("Order's delivery confirmed"))->getData();
         }
     }

@@ -22,7 +22,14 @@
                     if (empty($urlList)) {
                         return OrderService::createOrder($requestData->body);
                     }
-                    return array();
+
+                    if (!preg_match($GLOBALS["UUID_REGEX"], $urlList[0]) 
+                        || strcmp($urlList[1], "status") != 0
+                        ) {
+                        throw new NonExistingURLException();
+                    }
+
+                    return OrderService::confirmOrder($urlList[0]);
                 default:
                     throw new NonExistingURLException();
             }
