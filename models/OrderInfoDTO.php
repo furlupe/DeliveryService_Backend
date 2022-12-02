@@ -8,15 +8,8 @@
         protected $status;
         protected $price;
 
-        public function __construct($id) {
-            $order = $GLOBALS["LINK"]->query(
-                "SELECT deliveryTime, orderTime, status, price
-                FROM ORDERS
-                WHERE id=?",
-                $id
-            )->fetch_assoc();
-
-            $this->id = $id;
+        public function __construct($order) {
+            $this->id = $order["id"];
             $this->deliveryTime = $order['deliveryTime'];
             $this->orderTime = $order['orderTime'];
             $this->status = $order['status'];

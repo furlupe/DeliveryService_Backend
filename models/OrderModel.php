@@ -1,5 +1,7 @@
 <?php
     include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
+    include_once dirname(__DIR__, 1)."/queries/BasketQueries.php";
+    include_once dirname(__DIR__, 1)."/queries/OrderQueries.php";
     include_once dirname(__DIR__, 1)."/utils/UUID.php";
     class OrderModel {
         protected $deliveryTime;
@@ -22,7 +24,7 @@
 
         public function createOrder() {
 
-            $basket = $this->getBasket();
+            $basket = BasketQueries::getBasket($this->userId);
 
             if(!$basket) {
                 throw new InvalidDataException(extras: 
@@ -32,59 +34,34 @@
                 );
             }
 
-            $GLOBALS["LINK"]->query(
-                "INSERT INTO ORDERS(id, userId, deliveryTime, orderTime, address)
-                VALUES (?, ?, ?, ?, ?)",
-                $this->id,
-                $this->userId,
-                $this->deliveryTime,
-                $this->orderTime,
-                $this->address
-            );
+            OrderQueries::createOrder((object) [
+                "id" => $this->id,
+                "userId" => $this->userId,
+                "deliveryTime" => $this->deliveryTime,
+                "orderTime" => $this->orderTime,
+                "address" => $this->address,
+            ]);
 
             $this->createOrderDish($basket);
             $this->countPrice();
 
-            $GLOBALS["LINK"]->query(
-                "UPDATE ORDERS
-                SET price=?
-                WHERE id=?",
-                $this->price, $this->id
-            );
+            OrderQueries::updateOrderPrice($this->price, $this->id);
 
-            $GLOBALS["LINK"]->query(
-                "DELETE FROM BASKET
-                WHERE userId=?",
-                $this->userId
-            );
+            BasketQueries::clearBasket($this->userId);
         }
 
-        private function getBasket() {
-            return $GLOBALS["LINK"]->query(
-                "SELECT dishId, amount
-                FROM BASKET
-                WHERE userId=?",
-                $this->userId
-            )->fetch_all();
-        }
         private function createOrderDish($basket) {
 
             foreach($basket as $key => $value) {
-                $GLOBALS["LINK"]->query(
-                    "INSERT INTO ORDER_DISHES(orderId, dishId, amount)
-                    VALUES (?, ?, ?)",
-                    $this->id, $value["dishId"], $value["amount"]
+                OrderQueries::addOrderDish(
+                    $this->id, 
+                    $value["dishId"], 
+                    $value["amount"]
                 );
             }
         }
         private function countPrice() {
-            $prices = $GLOBALS["LINK"]->query(
-                "SELECT price, amount
-                FROM DISHES INNER JOIN ORDER_DISHES
-                ON ORDER_DISHES.dishId = DISHES.id
-                WHERE orderId=?",
-                $this->id
-            )->fetch_all();
+            $prices = OrderQueries::getPriceAndAmount($this->id);
 
             foreach($prices as $key => $value) {
                 $this->price += intval($value["price"]) * intval($value["amount"]);

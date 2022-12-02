@@ -1,5 +1,6 @@
 <?php
     include_once dirname(__DIR__, 1)."/exceptions/NonExistingURLException.php";
+    include_once dirname(__DIR__, 1)."/queries/BasketQueries.php";
     include_once "BasicDTO.php";
     class DishBasketDTO extends BasicDTO {
         protected $id;
@@ -10,17 +11,11 @@
         protected $image;
 
         public function __construct($id, $amount) {
-            $dish = $GLOBALS["LINK"]->query(
-                "SELECT name, price, image
-                FROM DISHES
-                WHERE id=?",
-                $id
-            )->fetch_assoc();
+            $dish = BasketQueries::getDish($id);
 
             if (is_null($dish)) {
                 throw new NonExistingURLException("No such dish exists");
             }
-
 
             $this->id = $id;
             $this->amount = $amount;
