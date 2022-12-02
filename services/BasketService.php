@@ -3,6 +3,7 @@
     include_once dirname(__DIR__, 1)."/models/DishBasketDTO.php";
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
     include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
+    include_once dirname(__DIR__, 1)."/queries/BasicQueries.php";
 
     class BasketService {
         public static function getBasket() {
@@ -11,12 +12,7 @@
                 throw new AuthException();
             }
 
-            $basket = $GLOBALS["LINK"]->query(
-                "SELECT dishId, amount
-                FROM BASKET
-                WHERE userId = ?",
-                $userId
-            )->fetch_all();
+            $basket = BasketQueries::getBasket($userId);
             
             $response = array();
             foreach($basket as $key => $value) {
@@ -36,28 +32,7 @@
                 throw new AuthException();
             }
 
-            $exists = $GLOBALS["LINK"]->query(
-                "SELECT 1
-                FROM BASKET
-                WHERE userId=? AND dishId=?
-                LIMIT 1",
-                $userId, $id
-            )->fetch_assoc();
-
-            if($exists) {
-                $GLOBALS["LINK"]->query(
-                    "UPDATE BASKET
-                    SET amount=amount+1
-                    WHERE userId=? AND dishId=?",
-                    $userId, $id
-                );
-            } else {
-                $GLOBALS["LINK"]->query(
-                    "INSERT INTO BASKET(userId, dishId, amount)
-                    VALUES (?, ?, ?)",
-                    $userId, $id, 1
-                );
-            }
+            BasketQueries::addDish($userId, $id);
 
             return (new BasicResponse("Dish added"))->getData();
         }
@@ -69,18 +44,9 @@
             }
             echo $decrease;
             if ($decrease) {
-                $GLOBALS["LINK"]->query(
-                    "UPDATE BASKET
-                    SET amount=amount-1
-                    WHERE userId=? AND dishId=?",
-                    $userId, $id
-                );
+                BasketQueries::removeOneDish($userId, $id);
             } else {
-                $GLOBALS["LINK"]->query(
-                    "DELETE FROM BASKET
-                    WHERE userId=? AND dishId=?",
-                    $userId, $id
-                );
+                BasketQueries::removeAllDish($userId, $id);
             }
 
             return (new BasicResponse("Dish removed"))->getData();
