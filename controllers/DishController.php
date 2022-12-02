@@ -13,10 +13,20 @@
                     if(empty($urlList)) {
                         return DishService::getDishList($requestData->params);
                     }
+
                     if (!preg_match($GLOBALS["UUID_REGEX"], $urlList[0])) {
                         throw new NonExistingURLException();
                     }
-                    return DishService::getDish($urlList[0]);
+
+                    if (count($urlList) == 1) {
+                        return DishService::getDish($urlList[0]);
+                    }
+
+                    if (strcmp("rating", $urlList[1]) != 0 || strcmp("check", $urlList[2]) != 0) {
+                        throw new NonExistingURLException();
+                    }
+
+                    return DishService::checkIfCanSetRating($urlList[0]);
                 case "POST":
                     if(empty($urlList)) {
                         throw new NonExistingURLException(); 

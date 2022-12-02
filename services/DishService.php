@@ -63,5 +63,19 @@
 
             return (new BasicResponse("Rating set: $rating"))->getData();
         }
+
+        public static function checkIfCanSetRating($dishId) {
+            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
+            if (is_null($userId)) {
+                throw new AuthException();
+            }
+
+            return $GLOBALS["LINK"]->query(
+                "SELECT dishId
+                FROM USER_DISH_ORDERED
+                WHERE userId=? AND dishId=?",
+                $userId, $dishId
+            )->num_rows() > 0;
+        }
     }
 ?>
