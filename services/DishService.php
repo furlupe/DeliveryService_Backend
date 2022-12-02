@@ -37,7 +37,14 @@
                 throw new AuthException();
             }
 
-            $exists = $GLOBALS["LINK"]->query(
+            $GLOBALS["LINK"]->query(
+                "INSERT INTO RATING(userId, dishId, value)
+                VALUES (?, ?, ?)
+                ON DUPLICATE KEY UPDATE value=?",
+                $userId, $id, $rating, $rating
+            );
+
+            /*$exists = $GLOBALS["LINK"]->query(
                 "SELECT 1
                 FROM RATING
                 WHERE userId=? AND dishId=?
@@ -59,7 +66,7 @@
                     VALUES (?, ?, ?)",
                     $userId, $id, $rating
                 );
-            }
+            }*/
 
             return (new BasicResponse("Rating set: $rating"))->getData();
         }
