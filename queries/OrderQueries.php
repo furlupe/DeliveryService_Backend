@@ -11,7 +11,7 @@
 
         public static function getOrder($orderId) {
             return $GLOBALS["LINK"]->query(
-                "SELECT deliveryTime, orderTime, status, price, address
+                "SELECT *
                 FROM ORDERS
                 WHERE id=?",
                 $orderId

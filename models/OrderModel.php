@@ -9,18 +9,31 @@
         protected $userId;
         protected $orderTime;
         protected $price;
-        protected $errors;
         protected $id;
 
         public function __construct($data, $userId) {
             $this->userId = $userId;
-            $this->deliveryTime = date('Y-m-d H:m', strtotime($data->deliveryTime));
+            $this->setDeliveryTime($data->deliveryTime);
             $this->address = $data->address;
             $this->orderTime = date('Y-m-d H:m');
             $this->id = UUID::v4();
             $this->price = 0;
             
         }
+
+        private function setDeliveryTime($date) {
+            $d = DateTime::createFromFormat('Y-m-d H:m', $date);
+            if(strlen($date) < 1 || !$d) {
+                throw new InvalidDataException(extras: 
+                    array("errors" => array(
+                        "deliveryTime" => "Wrong timedate format"
+                    ))
+                );
+            }
+
+            $this->deliveryTime = $d->format('Y-m-d H:m');
+        }
+
 
         public function createOrder() {
 
