@@ -3,7 +3,7 @@
     include_once dirname(__DIR__, 1)."/models/DishBasketDTO.php";
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
     include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
-    include_once dirname(__DIR__, 1)."/queries/BasicQueries.php";
+    include_once dirname(__DIR__, 1)."/queries/BasketQueries.php";
 
     class BasketService {
         public static function getBasket() {

@@ -25,6 +25,10 @@
                 WHERE userId=? AND dishId=?",
                 $userId, $dishId
             );
+
+            $GLOBALS["LINK"]->query(
+                "DELETE FROM BASKET WHERE amount<1"
+            );
         }
 
         public static function removeAllDish($userId, $dishId) {
