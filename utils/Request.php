@@ -47,6 +47,8 @@
             switch($this->uri[1]) {
                 case "account":
                     return new AccountRouter();
+            default:
+                throw new NonExistingUrlException();
             }
         }
     }
