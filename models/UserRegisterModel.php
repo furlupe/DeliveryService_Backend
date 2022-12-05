@@ -2,6 +2,7 @@
     include_once dirname(__DIR__, 1)."/enums/Gender.php";
     include_once dirname(__DIR__, 1)."/exceptions/InvalidDataException.php";
     include_once dirname(__DIR__, 1)."/utils/dbStringFormat.php";
+    include_once dirname(__DIR__, 1)."/queries/AccountQueries.php";
 
     class UserRegisterModel {
         private $fullName;
@@ -35,16 +36,11 @@
         }
 
         public function exists($email) {
-            return $this->link->query(
-                "SELECT id 
-                FROM USERS 
-                WHERE email=?",
-                $email)->fetch_assoc();
+            return AccountQueries::getUser($email);
         }
 
         public function store() {
-            $this->link->query("INSERT INTO USERS(id, name, birthdate, gender, phone, email, adress, password) 
-                VALUES(UUID(), ?, ?, ?, ?, ?, ?, ?)",
+            AccountQueries::addUser(
                 $this->fullName,
                 formatDbNullableString($this->birthDate),
                 $this->gender,

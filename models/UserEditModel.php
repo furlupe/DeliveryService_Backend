@@ -1,4 +1,5 @@
 <?php
+    include_once dirname(__DIR__, 1) . "/queries/AccountQueries.php";
     class UserEditModel {
         private $fullName;
         private $address;
@@ -29,15 +30,13 @@
             }
         }
         public function edit() {
-            $this->link->query("UPDATE USERS 
-                SET name=?, birthdate=?, gender=?, phone=?, adress=?
-                WHERE email=?",
+            AccountQueries::editUser(
+                $this->email,
                 $this->fullName, 
                 $this->birthDate,
                 $this->gender,
                 $this->phoneNumber,
-                $this->address,
-                $this->email
+                $this->address
             );
         }
 

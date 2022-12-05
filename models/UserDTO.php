@@ -1,5 +1,6 @@
 <?php
     include_once "BasicDTO.php";
+    include_once dirname(__DIR__, 1) . "/queries/AccountQueries.php";
     class UserDTO extends BasicDTO{
         protected $id;
         protected $fullName;
@@ -10,12 +11,7 @@
         protected $phoneNumber;
 
         public function __construct($email) {
-            $user = $GLOBALS["LINK"]->query(
-                "SELECT id, name, birthdate, gender, phone, email, adress 
-                FROM USERS 
-                WHERE email=?",
-                $email
-            )->fetch_assoc();
+            $user = AccountQueries::getUser($email);
 
             $this->id = $user['id'];
             $this->fullName = $user['name'];

@@ -25,10 +25,12 @@
                 return "HTTP/1.0 200 OK";
             case "400":
                 return "HTTP/1.0 400 Bad Request";
-            case "404":
-                return "HTTP/1.0 404 Not Found";
             case "401":
                 return "HTTP/1.0 401 Unauthorized";
+            case "403":
+                return "HTTP/1.0 403 Forbidden";
+            case "404":
+                return "HTTP/1.0 404 Not Found";
             case "500":
                 return "HTTP/1.0 500 Internal Server Error";
         }

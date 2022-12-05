@@ -26,6 +26,10 @@
             $this->dishes = array();
             $this->errors = array();
 
+            if ($filters["page"] < 1) {
+                throw new URLParametersException(extras: array("Page" => "Page can't be below 1"));
+            }
+
             foreach($this->getDishes($filters) as $key => $value) {
                 array_push(
                     $this->dishes, 
@@ -34,7 +38,7 @@
             }
 
             $sort = $filters["sorting"];
-            if (!is_null($sort)) {
+            if (!is_null($sort) && !empty($sort)) {
                 switch($sort) {
                     case "RatingAsc":
                         $this->priceSort($this->dishes, 1);
@@ -44,13 +48,9 @@
                         break;
                     default:
                         if (!array_key_exists($sort, self::dbOrderClauses)) {
-                            $this->errors["sorting"] = "No such sorting exists";
+                            throw new URLParametersException(extras: array("Sorting" => "No such sorting exists"));
                         }
                 }
-            }
-
-            if (!empty($this->errors)) {
-                throw new URLParametersException(extras: array("errors" => $this->errors));
             }
 
             $this->pagination = (new PageInfoModel(sizeof($this->dishes), $filters["page"]))->getData();

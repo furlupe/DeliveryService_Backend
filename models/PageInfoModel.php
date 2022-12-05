@@ -13,11 +13,10 @@
             if ($size == 0) {
                 $page = 0;
             }
-            if($page > $this->count) {
+
+            if($page > $this->count || $page < 1) {
                 throw new URLParametersException(
-                    extras: array("errors" => array(
-                        "page" => "Page index is greater than amount of pages"
-                    ))
+                    extras: array("Page" => "Page index is greater than amount of pages")
                 );
             }
 

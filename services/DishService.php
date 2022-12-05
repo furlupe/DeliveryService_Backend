@@ -1,6 +1,7 @@
 <?php
     include_once dirname(__DIR__, 1)."/models/DishPagedListDTO.php";
     include_once dirname(__DIR__, 1)."/exceptions/URLParametersException.php";
+    include_once dirname(__DIR__, 1)."/exceptions/RatingNotAllowedException.php";
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
     include_once dirname(__DIR__, 1)."/utils/Token.php";
     include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
@@ -27,15 +28,17 @@
         public static function setRating($id, $rating) : array {
             if($rating < 1 || $rating > 10) {
                 throw new URLParametersException(
-                    extras: array("errors" => array(
-                        "rating" => "rating is not in range [1, 10]"
-                    ))
+                    extras: array("rating" => "rating is not in range [1, 10]")
                 );
             }
 
             $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
             if (is_null($userId)) {
                 throw new AuthException();
+            }
+
+            if (!self::checkIfCanSetRating($id)) {
+                throw new RatingNotAllowedException();
             }
 
             DishQueries::setRating($userId, $id, $rating);

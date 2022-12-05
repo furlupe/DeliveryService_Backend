@@ -1,6 +1,7 @@
 <?php
     include_once "exceptions/NonExistingUrlException.php";
     include_once dirname(__DIR__, 1)."/routers/DishRouter.php";
+    include_once dirname(__DIR__, 1)."/routers/AccountRouter.php";
     class Request {
         private $method;
         private $uri;
@@ -62,6 +63,8 @@
             switch($this->uri[1]) {
                 case "account":
                     return new AccountRouter();
+                case "dish":
+                    return new DishRouter();
                 default:
                     throw new NonExistingUrlException();
             }
