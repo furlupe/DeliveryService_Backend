@@ -46,6 +46,7 @@
             if(is_null($userId)) {
                 throw new AuthException();
             }
+
             $order = new OrderModel($data, $userId);
             $order->createOrder();
             
@@ -58,6 +59,10 @@
                 throw new AuthException();
             }
 
+            $order = self::getOrder($id);
+            if (empty($order)) {
+                throw new NonExistingURLException();
+            }
             OrderQueries::confirmOrder($userId, $id);
             $dishes = OrderQueries::getOrderDishes($id);
             

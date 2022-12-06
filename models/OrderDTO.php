@@ -16,6 +16,7 @@
             if ($userId != $order["userId"]) {
                 throw new NonExistingURLException();
             }
+            
             $this->id = $order['id'];
             $this->deliveryTime = $order['deliveryTime'];
             $this->orderTime = $order['orderTime'];
