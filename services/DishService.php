@@ -32,8 +32,7 @@
                 );
             }
 
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
-            if (is_null($userId)) {
+            if (is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
 
@@ -41,19 +40,18 @@
                 throw new RatingNotAllowedException();
             }
 
-            DishQueries::setRating($userId, $id, $rating);
+            DishQueries::setRating($GLOBALS["USER_ID"], $id, $rating);
 
             return (new BasicResponse("Rating set: $rating"))->getData();
         }
 
         public static function checkIfCanSetRating($dishId) {
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
-            if (is_null($userId)) {
+            if (is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
 
             return DishQueries::getUserDishOrdered(
-                $userId, $dishId)->num_rows() > 0;
+                $GLOBALS["USER_ID"], $dishId)->num_rows() > 0;
         }
     }
 ?>

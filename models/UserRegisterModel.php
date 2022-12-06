@@ -55,6 +55,7 @@
             $d = DateTime::createFromFormat('Y-m-d', $date);
             if(strlen($date) < 1) {
                 $this->birthDate = null;
+                return;
             }
             if (!$d) {
                 $this->errors["birthdate"] = 

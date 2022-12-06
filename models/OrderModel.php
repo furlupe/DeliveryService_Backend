@@ -12,7 +12,6 @@
         protected $id;
 
         public function __construct($data, $userId) {
-            echo $data->deliveryTime;
             $this->userId = $userId;
             $this->setDeliveryTime($data->deliveryTime);
             $this->address = $data->address;

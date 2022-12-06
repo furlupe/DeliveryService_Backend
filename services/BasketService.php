@@ -7,12 +7,11 @@
 
     class BasketService {
         public static function getBasket() {
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
-            if(is_null($userId)) {
+            if(is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
 
-            $basket = BasketQueries::getBasket($userId);
+            $basket = BasketQueries::getBasket($GLOBALS["USER_ID"]);
             
             $response = array();
             foreach($basket as $key => $value) {
@@ -27,26 +26,24 @@
         }
 
         public static function addDish($id) {
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
-            if(is_null($userId)) {
+            if(is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
 
-            BasketQueries::addDish($userId, $id);
+            BasketQueries::addDish($GLOBALS["USER_ID"], $id);
 
             return (new BasicResponse("Dish added"))->getData();
         }
 
         public static function removeDish($id, $decrease) {
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
-            if(is_null($userId)) {
+            if(is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
             echo $decrease;
             if ($decrease) {
-                BasketQueries::removeOneDish($userId, $id);
+                BasketQueries::removeOneDish($GLOBALS["USER_ID"], $id);
             } else {
-                BasketQueries::removeAllDish($userId, $id);
+                BasketQueries::removeAllDish($GLOBALS["USER_ID"], $id);
             }
 
             return (new BasicResponse("Dish removed"))->getData();

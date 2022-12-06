@@ -9,13 +9,11 @@
 
     class OrderService {
         public static function getOrders() {
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
-
-            if(is_null($userId)) {
+            if(is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
 
-            $orders = OrderQueries::getOrders($userId);
+            $orders = OrderQueries::getOrders($GLOBALS["USER_ID"]);
             
             $response = array();
             foreach($orders as $key => $value) {
@@ -29,33 +27,30 @@
         }
 
         public static function getOrder($id) {
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
-            if(is_null($userId)) {
+            if(is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
 
             $order = (new OrderDTO(
-                $userId, OrderQueries::getOrder($id)
+                $GLOBALS["USER_ID"], OrderQueries::getOrder($id)
             ))->getData();
 
             return $order;
         }
 
         public static function createOrder($data) {
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
-            if(is_null($userId)) {
+            if(is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
 
-            $order = new OrderModel($data, $userId);
+            $order = new OrderModel($data, $GLOBALS["USER_ID"]);
             $order->createOrder();
             
             return (new BasicResponse("Order created"))->getData();
         }
 
         public static function confirmOrder($id) {
-            $userId = Token::getIdFromToken($GLOBALS["USER_TOKEN"]);
-            if(is_null($userId)) {
+            if(is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
 
@@ -63,12 +58,12 @@
             if (empty($order)) {
                 throw new NonExistingURLException();
             }
-            OrderQueries::confirmOrder($userId, $id);
+            OrderQueries::confirmOrder($GLOBALS["USER_ID"], $id);
             $dishes = OrderQueries::getOrderDishes($id);
             
             foreach($dishes as $key => $value) {
                 OrderQueries::addUserDish(
-                    $userId, 
+                    $GLOBALS["USER_ID"], 
                     $value["dishId"]
                 );
             }

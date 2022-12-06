@@ -1,11 +1,10 @@
 <?php
+    include_once dirname(__DIR__, 1) . "/queries/TokenQueries.php";
+    include_once dirname(__DIR__, 1) . "/queries/AccountQueries.php";
     class Token {
         private static $key = "morbius";
         public static function forbidToken($token) {
-            $GLOBALS["LINK"]->query(
-                "INSERT INTO BLACKLIST(value) VALUES (?)",
-                $token
-            );
+            TokenQueries::forbidToken($token);
         }
 
         public static function generateJWT($payload) : string {
@@ -26,7 +25,7 @@
 
             if(!$decoded) return null;
             
-            if(!self::getIdByEmail($decoded['payload']['email'])) {
+            if(!AccountQueries::getUser($decoded['payload']['email'])["id"]) {
                 return null;
             }
 
@@ -45,10 +44,7 @@
                 return null;
             }
 
-            if($GLOBALS["LINK"]->query(
-                "SELECT * FROM BLACKLIST WHERE value=?",
-                $token
-            )->fetch_assoc()) {
+            if(TokenQueries::getBlacklistedToken($token)) {
                 return null;
             }
 
@@ -58,7 +54,7 @@
         public static function getIdFromToken($token) {
             $email = self::getEmailFromToken($GLOBALS["USER_TOKEN"]);
 
-            return self::getIdByEmail($email);
+            return AccountQueries::getUser($email)["id"];
         }
         private static function base64url_encode($str) : string {
             return str_replace(
@@ -77,10 +73,7 @@
         }
 
         private static function getIdByEmail($email) {
-            return $GLOBALS["LINK"]->query(
-                    "SELECT id FROM USERS WHERE email=?",
-                    $email
-                )->fetch_assoc()["id"];
+            return AccountQueries::getUser($email)["id"];
         }
 
         private static function makeSignature($headers, $payload) {

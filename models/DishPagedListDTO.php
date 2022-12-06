@@ -56,8 +56,8 @@
             $this->pagination = (new PageInfoModel(sizeof($this->dishes), $filters["page"]))->getData();
             $this->dishes = array_slice(
                 $this->dishes,   
-                $this->pagination["size"] * ($this->pagination["current"] - 1),
-                $this->pagination["size"]
+                PageInfoModel::MAX_PAGE_SIZE * ($this->pagination["current"] - 1),
+                PageInfoModel::MAX_PAGE_SIZE
             );
         }
 
