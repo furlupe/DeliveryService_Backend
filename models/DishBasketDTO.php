@@ -14,9 +14,8 @@
             $dish = DishQueries::getDish($id);
 
             if (is_null($dish)) {
-                throw new InvalidDataException("No such dish exists");
+                throw new NonExistingURLException("No such dish exists");
             }
-
 
             $this->id = $id;
             $this->amount = $amount;

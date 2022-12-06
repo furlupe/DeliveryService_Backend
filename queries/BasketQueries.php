@@ -38,5 +38,14 @@
                 $userId, $dishId
             );
         }
+
+        public static function clearBasket($userId) {
+            $GLOBALS["LINK"]->query(
+                "DELETE FROM BASKET
+                WHERE userId=?",
+                $userId
+            );
+        }
+
     }
 ?>

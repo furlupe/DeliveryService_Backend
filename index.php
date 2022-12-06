@@ -20,8 +20,7 @@
     $USER_TOKEN = explode(" ", getallheaders()["Authorization"])[1];
 
     try {
-        $request = new Request();
-        $request->callRouter();
+        (new Request())->callRouter();
     }
     catch (IExtendedException $e) {
         $e->sendHTTP();

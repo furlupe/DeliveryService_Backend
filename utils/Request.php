@@ -3,6 +3,7 @@
     include_once dirname(__DIR__, 1)."/routers/DishRouter.php";
     include_once dirname(__DIR__, 1)."/routers/BasketRouter.php";
     include_once dirname(__DIR__, 1)."/routers/AccountRouter.php";
+    include_once dirname(__DIR__, 1)."/routers/OrderRouter.php";
     class Request {
         private $method;
         private $uri;
@@ -68,6 +69,8 @@
                     return new DishRouter();
                 case "basket":
                     return new BasketRouter();
+                case "order":
+                    return new OrderRouter();
                 default:
                     throw new NonExistingUrlException();
             }
