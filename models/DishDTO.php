@@ -16,7 +16,7 @@
             $data = DishQueries::getDish($id);
 
             if (is_null($data)) {
-                throw new InvalidDataException("No such dish exists");
+                throw new InvalidDataException("No such dish with id = ".$id." exists");
             }
 
             $this->id = $id;
