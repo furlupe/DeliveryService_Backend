@@ -3,6 +3,7 @@
     include_once dirname(__DIR__, 1)."/queries/BasketQueries.php";
     include_once dirname(__DIR__, 1)."/queries/OrderQueries.php";
     include_once dirname(__DIR__, 1)."/utils/UUID.php";
+    include_once dirname(__DIR__, 1)."/utils/dateFormatting.php";
     class OrderModel {
         protected $deliveryTime;
         protected $address;
@@ -10,28 +11,49 @@
         protected $orderTime;
         protected $price;
         protected $id;
+        const DELTA_TIME = 30;
 
         public function __construct($data, $userId) {
             $this->userId = $userId;
-            $this->setDeliveryTime($data->deliveryTime);
-            $this->address = $data->address;
             $this->orderTime = date('Y-m-d H:i');
+            $this->setDeliveryTime($data->deliveryTime);
+            $this->setAddress($data->address);
             $this->id = UUID::v4();
             $this->price = 0;
-            
+
         }
 
         private function setDeliveryTime($date) {
-            $d = DateTime::createFromFormat('Y-m-d H:i', $date);
+            $date = dateFormatting($date);
+            $d = DateTime::createFromFormat('Y-m-d H:i:s', $date);
             if(strlen($date) < 1 || !$d) {
                 throw new InvalidDataException(extras: 
                     array("errors" => array(
-                        "deliveryTime" => "Wrong timedate format"
-                    ))
-                );
+                            "deliveryTime" => "Wrong timedate format"
+                        )
+                    ));
+            }
+            $diff = $d->diff(DateTime::createFromFormat('Y-m-d H:i', $this->orderTime));
+            $mins = $diff->days * 24 * 60;
+            $mins += $diff->h * 60;
+            $mins += $diff->i;
+
+            if ($mins < self::DELTA_TIME) {
+                throw new InvalidDataException(extras: 
+                    array("errors" => array(
+                            "deliveryTime" => "Delivery time is to small! (at least ".self::DELTA_TIME." mins)"
+                        )
+                    ));
+            }
+            $this->deliveryTime = $d->format('Y-m-d H:i');
+        }
+
+        private function setAddress($address) {
+            if (is_null($address) || empty($address)) {
+                throw new InvalidDataException("No address provided. Where should we deliver?");
             }
 
-            $this->deliveryTime = $d->format('Y-m-d H:i');
+            $this->address = $address;
         }
 
 

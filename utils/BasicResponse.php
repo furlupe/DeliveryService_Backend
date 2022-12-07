@@ -1,10 +1,9 @@
 <?php
-    include_once "headers.php";
     class BasicResponse {
         private $status;
         private $message;
-        public function __construct($message, $code = "200") {
-            $this->status = determineStatus($code);
+        public function __construct($message, $code = null) {
+            $this->status = $code;
             $this->message = $message;
         }
 

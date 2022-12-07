@@ -1,7 +1,7 @@
 <?php
     include_once dirname(__DIR__, 1)."/models/DishPagedListDTO.php";
     include_once dirname(__DIR__, 1)."/exceptions/URLParametersException.php";
-    include_once dirname(__DIR__, 1)."/exceptions/RatingNotAllowedException.php";
+    include_once dirname(__DIR__, 1)."/exceptions/NotAllowedException.php";
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
     include_once dirname(__DIR__, 1)."/utils/Token.php";
     include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
@@ -10,9 +10,9 @@
         public static function getDishList($filters) : array {
             if (!isset($filters["page"]) || empty($filters["page"])) {
                 throw new URLParametersException(
-                    extras: array("errors" => array(
+                    extras: array(
                         "page" => "Page must be specified"
-                    ))
+                    )
                 );
             }
 
@@ -37,7 +37,7 @@
             }
 
             if (!self::checkIfCanSetRating($id)) {
-                throw new RatingNotAllowedException();
+                throw new NotAllowedException('User is not allowed to set the rating on that dish');
             }
 
             DishQueries::setRating($GLOBALS["USER_ID"], $id, $rating);

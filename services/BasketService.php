@@ -4,6 +4,8 @@
     include_once dirname(__DIR__, 1)."/exceptions/AuthException.php";
     include_once dirname(__DIR__, 1)."/utils/BasicResponse.php";
     include_once dirname(__DIR__, 1)."/queries/BasketQueries.php";
+    include_once dirname(__DIR__, 1)."/queries/DishQueries.php";
+
 
     class BasketService {
         public static function getBasket() {
@@ -29,7 +31,9 @@
             if(is_null($GLOBALS["USER_ID"])) {
                 throw new AuthException();
             }
-
+            if(!DishQueries::getDish($id)) {
+                throw new NonExistingURLException();
+            }
             BasketQueries::addDish($GLOBALS["USER_ID"], $id);
 
             return (new BasicResponse("Dish added"))->getData();

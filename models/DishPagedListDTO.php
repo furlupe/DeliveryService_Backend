@@ -80,6 +80,9 @@
             if($where) $dbRequest["WHERE"] = implode(" AND ", $where);
             
             if (!is_null($filters["sorting"])) {
+                if(is_array($filters["sorting"])) {
+                    throw new URLParametersException(extras: array("Sorting" => "Choose only ONE sorting"));
+                }
 
                 if (array_key_exists(
                         $filters["sorting"], 
@@ -114,8 +117,9 @@
                     $filters["vegeterian"], 
                     FILTER_VALIDATE_BOOLEAN
                 );
-                $isVegeterian = ($isVegeterian) ? "1" : "0";
-                array_push($where, "vegeterian=$isVegeterian");
+                if($isVegeterian) {
+                    array_push($where, "vegeterian=$isVegeterian");
+                }
             }
 
             return $where;

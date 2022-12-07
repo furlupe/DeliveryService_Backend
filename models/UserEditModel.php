@@ -22,10 +22,17 @@
 
             $this->email = $data->email;
 
-            if ($this->errors) {
+            $e = array();
+            foreach($this->errors as $key => $value) {
+                if ($value) {
+                    $e[$key] = $value;
+                }
+            }
+
+            if($e) {
                 throw new InvalidDataException(
-                    "One or more fields contain wrong data",
-                    array("errors" => $this->errors)
+                    "One or more registration errors occured",
+                    array("errors" => $e)
                 );
             }
         }
@@ -41,27 +48,30 @@
         }
 
         private function setDate($date) {
-            $d = DateTime::createFromFormat('Y-m-d', $date);
+            $this->errors["BirthDate"] = array();
+            $date = dateFormatting($date);
+            $d = DateTime::createFromFormat('Y-m-d H:i:s', $date);
             if(strlen($date) < 1) {
                 $this->birthDate = null;
                 return;
             }
             if (!$d) {
-                $this->errors["birthdate"] = 
-                    (object) [
-                        "message" => "wrong birthdate"
-                    ];
+                array_push(
+                    $this->errors["BirthDate"], 
+                    "Wrong date format"
+                );
                 return;
             }
 
             $this->birthDate = $d->format('Y-m-d');
         }
         private function setName($name) {
+            $this->errors["FullName"] = array();
             if(strlen($name) < 1) {
-                $this->errors["name"] = 
-                    (object) [
-                        "message" => "name too short"
-                    ];
+                array_push(
+                    $this->errors["FullName"], 
+                    "Name too short"
+                );
                 return;
             }
 
@@ -69,11 +79,13 @@
         }
 
         private function setGender($gender) {
+            $this->errors["Gender"] = array();
+
             if(!Gender::checkIfExists($gender)) {
-                $this->errors["gender"] = 
-                    (object) [
-                        "message" => "invalid gender"
-                    ];
+                array_push(
+                    $this->errors["Gender"], 
+                    "No such gender exists"
+                );
                 return;
             }
 
@@ -82,12 +94,13 @@
 
         private function setPhone($phone) {
             if(!strlen($phone)) return null;
+            $this->errors["PhoneNumber"] = array();
 
             if(!preg_match('/\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/', $phone)) {
-                $this->errors["phone"] = 
-                    (object) [
-                        "message" => "invalid phone"
-                    ];
+                array_push(
+                    $this->errors["PhoneNumber"], 
+                    "Wrong phone number format"
+                );
                 return;
             }
 

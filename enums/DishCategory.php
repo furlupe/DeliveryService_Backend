@@ -33,10 +33,8 @@
             );
 
             if(!$r) throw new URLParametersException(extras: array(
-                "errors" => array(
                     "category" => "No such category exists"
-                )
-            ));
+                ));
             return $r;
         } 
     }
