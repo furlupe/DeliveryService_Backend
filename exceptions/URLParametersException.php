@@ -1,16 +1,14 @@
 <?php
-    include_once "ExtendedExceptionInterface.php";
-    class URLParametersException extends Exception implements IExtendedException{
-        private $data;
-        const code = '400';
-        const message = 'One or more parameters are wrong';
-        public function __construct($message = self::message, $code = self::code, $extras = null, Throwable $prev = null) {
-            parent::__construct($message, $code, $prev);
-            $this->data = $extras;
-        }
+    include_once "BasicEException.php";
+    class URLParametersException extends BasicEException{
+        protected $code = '400';
+        protected $message = 'One or more parameters are wrong';
+        protected $data = array("errors" => array());
 
-        public function getData() {
-            return $this->data;
+        public function __construct($message = null, $extras = null) {
+            $message = ($message) ? $message : $this->message;
+            Exception::__construct($message, $this->code,);
+            $this->data["errors"] = $extras;
         }
     }
 ?>
